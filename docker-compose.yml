@@ -1,0 +1,34 @@
+version: '3.8'
+name: why_park
+services:
+  pg:
+    image: postgres:12
+    container_name: pg
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: whypark
+      POSTGRES_PASSWORD: whypark123
+      POSTGRES_DB: db_why_park
+    cap_add:
+      - SYS_NICE
+    networks:
+      - postgres-networks
+    volumes:
+      - postgres-db-data:/var/lib/postgres
+  redis_whypk:
+    image: redis
+    container_name: redis_whypk
+    command: redis-server --save 20 1 --loglevel warning  --requirepass password123
+    ports:  
+      - "6379:6379"
+   
+    environment:
+      - REDIS_PASSWORD = password123
+volumes:
+  postgres-db-data:
+networks:
+  postgres-networks:
+    driver: bridge
+  redis_whypk:
+    driver: bridge

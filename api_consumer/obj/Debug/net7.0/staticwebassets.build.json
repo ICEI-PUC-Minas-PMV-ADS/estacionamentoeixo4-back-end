@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "FEr34QU/B7v6AgUAfhzAn/XLp7Trb0nX+l+6e0ydLD0=",
+  "Source": "api_consumer",
+  "BasePath": "_content/api_consumer",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
