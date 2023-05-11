@@ -19,4 +19,4 @@ jobs:
 
     steps:
       - name: Runs unit tests
-        run: cd /api_producer && npx jest test/unit
+        run: npx jest api_producer/test/unit
