@@ -38,6 +38,29 @@ export class ManagerService {
     return administrador;
   }
 
+  async findEmail(email: string) {
+    const clienteResultDB =
+      await this.managerRepository.administrador.findUnique({
+        where: {
+          email,
+        },
+      });
+    return clienteResultDB;
+  }
+
+  async findOne(id: number) {
+    const clienteResultDB =
+      await this.managerRepository.administrador.findFirst({
+        where: {
+          id,
+        },
+      });
+
+    if (!clienteResultDB) throw new NotFoundException('Cliente não existente!');
+
+    return clienteResultDB;
+  }
+
   async getAll() {
     try {
       const managers = await this.managerRepository.administrador.findMany({

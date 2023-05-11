@@ -56,6 +56,7 @@ model Administrador {
   nome            String
   email           String                             @unique
   estacionamentos EstacionamentoAndAdministradores[]
+  uuid_firebase   String                             @unique
 
   // Nome da tabela @@map
   @@map("administrador")

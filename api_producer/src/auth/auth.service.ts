@@ -12,6 +12,7 @@ import { Cache } from 'cache-manager';
 import { Cliente } from '@prisma/client';
 import { ClienteService } from '@src/cliente/cliente.service';
 import { AuthDTO } from './dto/me.input';
+import { ManagerService } from '@src/manager/services/manager.service';
 class UserCache {
   refreshToken: string;
   client: Cliente;
@@ -20,7 +21,7 @@ class UserCache {
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly clienteService: ClienteService,
+    private readonly service: ClienteService | ManagerService,
     private jwtService: JwtService,
     @Inject(CACHE_MANAGER)
     private readonly authCache: Cache,
@@ -31,9 +32,15 @@ export class AuthService {
 
   async me(auth: AuthDTO) {
     // Check if user exists
-    const user = await this.clienteService.findEmail(auth.email);
-
-    if (!user) throw new BadRequestException('User does not exist');
+    let user: any = await (this.service as ClienteService).findEmail(
+      auth.email,
+    );
+    if (!user) {
+      user = await (this.service as ManagerService).findEmail(auth.email);
+      if (!user) throw new BadRequestException('User not found');
+    } else {
+      throw new BadRequestException('User does not exist');
+    }
 
     //Get the token
     const tokens = await this.getTokens(user.id, user.name);
@@ -53,9 +60,15 @@ export class AuthService {
   }
 
   async updateRefreshToken(userId: number, refreshToken: string) {
-    const user = await this.clienteService.findOne(userId);
+    let user: any = await (this.service as ClienteService).findOne(userId);
 
-    if (!user) throw new BadRequestException('User not found');
+    if (!user) {
+      user = await (this.service as ManagerService).findOne(userId);
+
+      if (!user) throw new BadRequestException('User not found');
+    } else {
+      throw new BadRequestException('User not found');
+    }
 
     const hashedRefreshToken = await this.hashData(refreshToken);
 
@@ -114,8 +127,15 @@ export class AuthService {
     );
 
     if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
+    let user: any = await (this.service as ClienteService).findOne(userId);
 
-    const user = await this.clienteService.findOne(userId);
+    if (!user) {
+      user = await (this.service as ManagerService).findOne(userId);
+
+      if (!user) throw new BadRequestException('User not found');
+    } else {
+      throw new BadRequestException('User not found');
+    }
     const tokens = await this.getTokens(user.id, user.name);
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
