@@ -1,0 +1,22 @@
+name: Tests Pipeline
+on:
+  push:
+    branches:
+      - '**' # em qualquer branch que for realizado push, atira action
+
+  pull_request:
+    branches:
+      - main
+      - master
+      - develop
+      - homolog
+
+jobs:
+  e2e-tests:
+    name: End to end tests
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Runs unit tests
+        run: cd /api_producer && npx jest test/unit
