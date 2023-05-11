@@ -9,7 +9,7 @@ export class AuthDTO {
     description: 'Id do cliente',
   })
   @IsNotEmpty()
-  id: string;
+  id: number;
 
   @IsString()
   @IsNotEmpty()
