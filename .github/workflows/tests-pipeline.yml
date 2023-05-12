@@ -26,4 +26,5 @@ jobs:
         run: yarn install
 
       - name: Run unit tests
-        run: npx jest test/unit
+        working-directory: test
+        run: npx jest unit
