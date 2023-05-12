@@ -19,9 +19,9 @@ jobs:
     steps:
 
       - name: Install dependencies
+        working-directory: ./api_producer
         run: yarn install
-        working-directory: api_producer
 
       - name: Run unit tests
+        working-directory: ./api_producer
         run: npx jest test/unit
-        working-directory: api_producer
