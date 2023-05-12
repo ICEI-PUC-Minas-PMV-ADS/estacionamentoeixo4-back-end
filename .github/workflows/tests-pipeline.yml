@@ -18,8 +18,11 @@ jobs:
 
     steps:
 
+      - name: Checkout project 
+        uses: actions/checkout@v2
+
       - name: Install dependencies
-        working-directory: ../api_producer
+        working-directory: api_producer
         run: yarn install
 
       - name: Run unit tests
