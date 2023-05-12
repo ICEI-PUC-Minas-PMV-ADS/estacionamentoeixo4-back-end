@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Install dependencies
-        run: ./api_producer && yarn install
+        run: yarn install
 
       - name: Runs unit tests
-        run: npx jest api_producer/test/unit
+        run: npx jest test/unit
