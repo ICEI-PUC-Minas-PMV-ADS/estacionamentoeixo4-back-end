@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Install dependencies
-        run: yarn install
+        run: cd api_producer && yarn install
 
       - name: Runs unit tests
         run: npx jest test/unit
