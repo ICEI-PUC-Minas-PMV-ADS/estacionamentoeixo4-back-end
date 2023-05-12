@@ -18,8 +18,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Find api_producer directory
+        run: cd api_producer 
+
       - name: Install dependencies
-        run: cd api_producer && yarn install
+        run: yarn install
 
       - name: Runs unit tests
         run: npx jest test/unit
