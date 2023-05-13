@@ -24,8 +24,10 @@ namespace api_consumer.Api.Reserva.Repository
             await _context.AddAsync(avaliacao);
             await _context.SaveChangesAsync();
         }
-              
 
+        public async Task<AvaliacaoEntity> GetAvaliacaoByIdEstacionamento(int idEstacionamento) {
+            return await _context.avaliacao.FirstOrDefaultAsync(a => a.id_estacionamento == idEstacionamento);
+        }
         //public void DeleteReserva(ReservaEntity reserva)
         //{
         //    if (reserva == null)
@@ -49,14 +51,6 @@ namespace api_consumer.Api.Reserva.Repository
         {
 
             await _context.SaveChangesAsync();
-        }
-
-        public async Task CloseDb()
-        {
-            if (_context.Database.GetDbConnection().State == ConnectionState.Open)
-            {
-                _context.Database.GetDbConnection().Dispose();
-            }
         }
     }
 }

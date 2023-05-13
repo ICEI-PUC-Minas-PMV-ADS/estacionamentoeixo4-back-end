@@ -10,14 +10,26 @@ namespace api_consumer.Api.Reserva.Endpoints
     {
         public static void MapAvaliacao(this WebApplication app)
         {
-            app.MapPost("api/v1/avaliacao", async (AvaliacaoRepo repo, IMapper mapper, AvaliacaoCreateDto avaliacaoCreateDto) =>
+
+            app.MapGet("api/v1/avaliacao/{idEstacionamento}", async (IAvaliacaoRepo repo, IMapper mapper,  int idEstacionamento) =>
             {
+                var avaliacao = await repo.GetAvaliacaoByIdEstacionamento(idEstacionamento);
+
+                if (avaliacao == null) {
+                    return Results.NotFound();
+                }
+
+                var avaliacaoDto = mapper.Map<AvaliacaoReadDto>(avaliacao);
+
+                return Results.Ok(avaliacaoDto);
+            });
+
+            app.MapPost("api/v1/avaliacao", async (IAvaliacaoRepo repo, IMapper mapper, AvaliacaoCreateDto avaliacaoCreateDto) => {
 
                 var avaliacao = mapper.Map<AvaliacaoEntity>(avaliacaoCreateDto);
 
                 await repo.CreateAvaliacao(avaliacao);
                 await repo.SaveChanges();
-
 
             });
         }
