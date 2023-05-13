@@ -11,31 +11,35 @@ export class CreateClienteDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    default: 'JhonDoezinho',
     type: 'string',
     description: 'Nome do cliente',
   })
-  @MaxLength(8)
+  @MinLength(10)
   name: string;
 
   @IsString()
   @IsNotEmpty()
+  @MaxLength(50)
   @ApiProperty({
-    default: 'jhondoezinho@hotmail.com',
     type: 'string',
     description: 'Email do cliente',
   })
-  @MaxLength(50)
   email: string;
 
-  @IsInt()
+  @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    default: '12232123211',
     type: 'string',
     description: 'CPF do cliente',
   })
-  @MinLength(11)
   @MaxLength(11)
   cpf: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    type: 'string',
+    description: 'UUid do cliente',
+  })
+  uuid_firebase: string;
 }

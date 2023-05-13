@@ -7,6 +7,11 @@ export declare class AuthController {
     me(auth: AuthDTO): Promise<{
         accessToken: string;
         refreshToken: string;
+        user: {
+            id: any;
+            email: any;
+            uuid_firebase: any;
+        };
     }>;
     refreshTokens(req: Request): Promise<{
         accessToken: string;

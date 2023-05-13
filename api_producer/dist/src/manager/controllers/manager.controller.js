@@ -25,6 +25,7 @@ let ManagerController = class ManagerController {
         this.mapper = mapper;
     }
     create(createManagerDto) {
+        console.log(createManagerDto);
         return this.managerService.create(this.mapper.mapCreateManagerDtoToCreateManagerModel(createManagerDto));
     }
     getAll() {

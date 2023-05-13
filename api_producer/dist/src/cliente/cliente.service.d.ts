@@ -10,6 +10,7 @@ export declare class ClienteService {
     create(createClienteDto: CreateClienteDto): Promise<Cliente>;
     findAll(): Promise<Cliente[]>;
     findOne(id: number): Promise<Cliente>;
+    findOneUuid(uuid: string): Promise<Cliente>;
     findEmail(email: string): Promise<Cliente>;
     update(id: number, updateClienteDto: UpdateClienteDto): Promise<Cliente>;
     remove(id: number): Promise<Cliente>;

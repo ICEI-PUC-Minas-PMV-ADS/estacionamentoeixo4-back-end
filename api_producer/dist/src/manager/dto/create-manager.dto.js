@@ -20,7 +20,6 @@ __decorate([
     (0, swagger_1.ApiProperty)({
         description: 'Nome do administrador',
         type: 'string',
-        default: 'jhoh Doe',
     }),
     (0, class_validator_1.MinLength)(1),
     __metadata("design:type", String)
@@ -31,7 +30,6 @@ __decorate([
     (0, swagger_1.ApiProperty)({
         description: 'Email do administrador',
         type: 'string',
-        default: 'jhohdoe@hotmail.com',
     }),
     (0, class_validator_1.MinLength)(1),
     __metadata("design:type", String)
@@ -39,12 +37,11 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, swagger_1.ApiProperty)({
-        description: 'Id do estacionamento',
+        description: 'UUId do estacionamento',
         type: 'string',
-        default: 1,
     }),
-    (0, class_validator_1.IsInt)(),
-    __metadata("design:type", Number)
-], CreateManagerDto.prototype, "id_estacionamento", void 0);
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateManagerDto.prototype, "uuid_firebase", void 0);
 exports.CreateManagerDto = CreateManagerDto;
 //# sourceMappingURL=create-manager.dto.js.map

@@ -8,14 +8,13 @@ class ManagerMapper {
         const createManagerModel = new create_manager_model_1.CreateManagerModel();
         createManagerModel.email = dto.email;
         createManagerModel.nome = dto.nome;
-        createManagerModel.id_estacionamento = dto.id_estacionamento;
+        createManagerModel.uuid_firebase = dto.uuid_firebase;
         return createManagerModel;
     }
     mapUpdateManagerDtoToUpdateManagerModel(dto) {
         const createManagerModel = new update_manager_model_1.UpdateManagerModel();
         createManagerModel.email = dto.email;
         createManagerModel.nome = dto.nome;
-        createManagerModel.id_estacionamento = dto.id_estacionamento;
         return createManagerModel;
     }
 }

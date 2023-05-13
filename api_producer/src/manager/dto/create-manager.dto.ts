@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsNotEmpty, IsString, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateManagerDto {
@@ -7,7 +7,6 @@ export class CreateManagerDto {
   @ApiProperty({
     description: 'Nome do administrador',
     type: 'string',
-    default: 'jhoh Doe',
   })
   @MinLength(1)
   nome: string;
@@ -17,17 +16,15 @@ export class CreateManagerDto {
   @ApiProperty({
     description: 'Email do administrador',
     type: 'string',
-    default: 'jhohdoe@hotmail.com',
   })
   @MinLength(1)
   email: string;
 
   @IsNotEmpty()
   @ApiProperty({
-    description: 'Id do estacionamento',
+    description: 'UUId do estacionamento',
     type: 'string',
-    default: 1,
   })
-  @IsInt()
-  id_estacionamento: number;
+  @IsString()
+  uuid_firebase: string;
 }

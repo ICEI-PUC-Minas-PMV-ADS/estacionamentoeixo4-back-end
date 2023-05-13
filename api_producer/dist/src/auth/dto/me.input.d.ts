@@ -1,4 +1,4 @@
 export declare class AuthDTO {
-    id: string;
+    uuid_firebase: string;
     email: string;
 }

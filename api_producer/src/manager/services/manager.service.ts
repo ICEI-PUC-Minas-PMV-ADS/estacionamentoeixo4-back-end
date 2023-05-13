@@ -14,7 +14,7 @@ export class ManagerService {
   constructor(private readonly managerRepository: PrismaService) {}
 
   async create(CreateManagerDto: CreateManagerDto) {
-    const { nome, email } = CreateManagerDto;
+    const { nome, email, uuid_firebase } = CreateManagerDto;
 
     const emailExists: Administrador =
       await this.managerRepository.administrador.findFirst({
@@ -32,6 +32,7 @@ export class ManagerService {
         data: {
           nome,
           email,
+          uuid_firebase,
         },
       });
 
@@ -52,12 +53,19 @@ export class ManagerService {
     const clienteResultDB =
       await this.managerRepository.administrador.findFirst({
         where: {
-          id,
+          id: id,
         },
       });
+    return clienteResultDB;
+  }
 
-    if (!clienteResultDB) throw new NotFoundException('Cliente não existente!');
-
+  async findOneUuid(uuid: string) {
+    const clienteResultDB =
+      await this.managerRepository.administrador.findFirst({
+        where: {
+          uuid_firebase: uuid,
+        },
+      });
     return clienteResultDB;
   }
 

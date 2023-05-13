@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsString, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateManagerDto {
@@ -19,13 +19,4 @@ export class UpdateManagerDto {
   })
   @MinLength(1)
   email: string;
-
-  @IsNotEmpty()
-  @ApiProperty({
-    description: 'Id do estacionamento',
-    type: 'string',
-    default: 1,
-  })
-  @IsInt()
-  id_estacionamento: number;
 }

@@ -28,6 +28,8 @@ export class ManagerController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   create(@Body() createManagerDto: CreateManagerDto) {
+    console.log(createManagerDto);
+
     return this.managerService.create(
       this.mapper.mapCreateManagerDtoToCreateManagerModel(createManagerDto),
     );

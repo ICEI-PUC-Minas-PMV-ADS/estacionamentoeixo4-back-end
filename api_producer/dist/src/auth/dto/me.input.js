@@ -15,15 +15,14 @@ const swagger_1 = require("@nestjs/swagger");
 class AuthDTO {
 }
 __decorate([
-    (0, class_validator_1.IsInt)(),
     (0, swagger_1.ApiProperty)({
         default: 1,
-        type: 'number',
+        type: 'string',
         description: 'Id do cliente',
     }),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], AuthDTO.prototype, "id", void 0);
+], AuthDTO.prototype, "uuid_firebase", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),

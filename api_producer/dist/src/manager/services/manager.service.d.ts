@@ -6,6 +6,9 @@ export declare class ManagerService {
     private readonly managerRepository;
     constructor(managerRepository: PrismaService);
     create(CreateManagerDto: CreateManagerDto): Promise<Administrador>;
+    findEmail(email: string): Promise<Administrador>;
+    findOne(id: number): Promise<Administrador>;
+    findOneUuid(uuid: string): Promise<Administrador>;
     getAll(): Promise<(Administrador & {
         estacionamentos: import(".prisma/client").EstacionamentoAndAdministradores[];
     })[]>;

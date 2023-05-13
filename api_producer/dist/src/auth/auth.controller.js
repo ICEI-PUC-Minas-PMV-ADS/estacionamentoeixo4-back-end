@@ -28,6 +28,7 @@ let AuthController = class AuthController {
     }
     refreshTokens(req) {
         const userId = req.user['sub'];
+        console.log(req.user);
         const refreshToken = req.user['refreshToken'];
         return this.authService.refreshTokens(userId, refreshToken);
     }

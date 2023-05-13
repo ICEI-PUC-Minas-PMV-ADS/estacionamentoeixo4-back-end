@@ -15,6 +15,8 @@ model Cliente {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now())
   Veiculo   Veiculo[]
+  uuid_firebase   String                             @unique
+
 
   // Nome da tabela @@map
   @@map("cliente")
@@ -81,4 +83,4 @@ model Endereco {
   uf                String         @db.Char(2)
   estacionamento    Estacionamento @relation(fields: [id_estacionamento], references: [id])
   id_estacionamento Int
-}
+} 
