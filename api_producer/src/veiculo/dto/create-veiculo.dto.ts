@@ -27,5 +27,5 @@ export class CreateVeiculoDto {
     default: 1,
   })
   @IsNotEmpty()
-  id_cliente: string;
+  id_cliente: number;
 }
