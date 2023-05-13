@@ -66,6 +66,24 @@ export class EstacionamentoService {
     return foundEstacionamento;
   }
 
+  async findEstacionamentosAdm(id_adm: number): Promise<Estacionamento[]> {
+    const foundEstacionamento: Estacionamento[] =
+      await this.clientRepository.estacionamento.findMany({
+        where: { administradores: { some: { id_administrador: id_adm } } },
+        include: {
+          administradores: true,
+        },
+      });
+
+    if (!foundEstacionamento) {
+      throw new InternalServerErrorException(
+        `Não foi possível encontrar os estacionamentos. id: ${id_adm}`,
+      );
+    }
+
+    return foundEstacionamento;
+  }
+
   async updateOne(
     id: number,
     updateEstacionamentoDto: UpdateEstacionamentoDto,
