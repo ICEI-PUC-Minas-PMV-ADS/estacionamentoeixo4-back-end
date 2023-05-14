@@ -41,6 +41,7 @@ export class AuthController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   refreshTokens(@Req() req: Request) {
     const userId = req.user['sub'];
+    console.log(req.user);
     const refreshToken = req.user['refreshToken'];
     return this.authService.refreshTokens(userId, refreshToken);
   }

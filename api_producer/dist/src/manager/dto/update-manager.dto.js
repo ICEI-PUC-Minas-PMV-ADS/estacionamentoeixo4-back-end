@@ -34,15 +34,5 @@ __decorate([
     (0, class_validator_1.MinLength)(1),
     __metadata("design:type", String)
 ], UpdateManagerDto.prototype, "email", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, swagger_1.ApiProperty)({
-        description: 'Id do estacionamento',
-        type: 'string',
-        default: 1,
-    }),
-    (0, class_validator_1.IsInt)(),
-    __metadata("design:type", Number)
-], UpdateManagerDto.prototype, "id_estacionamento", void 0);
 exports.UpdateManagerDto = UpdateManagerDto;
 //# sourceMappingURL=update-manager.dto.js.map

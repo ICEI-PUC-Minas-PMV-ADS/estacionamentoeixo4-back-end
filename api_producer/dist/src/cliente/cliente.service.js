@@ -47,8 +47,14 @@ let ClienteService = class ClienteService {
                 id,
             },
         });
-        if (!clienteResultDB)
-            throw new common_1.NotFoundException('Cliente não existente!');
+        return clienteResultDB;
+    }
+    async findOneUuid(uuid) {
+        const clienteResultDB = await this.clientRepository.cliente.findFirst({
+            where: {
+                uuid_firebase: uuid,
+            },
+        });
         return clienteResultDB;
     }
     async findEmail(email) {

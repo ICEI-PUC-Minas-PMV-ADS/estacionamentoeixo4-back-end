@@ -18,6 +18,7 @@ fdescribe('Testes unitários - Autenticação', () => {
       providers: [
         AuthService,
         ClienteService,
+        ManagerService,
         JwtService,
         { provide: CACHE_MANAGER, useValue: {} },
         PrismaService,
@@ -30,13 +31,18 @@ fdescribe('Testes unitários - Autenticação', () => {
 
   it('Deve retornar um accessToken a um refreshToken', async () => {
     const userCredentials: AuthDTO = {
-        id: 1,
-        email: "jhondoezinho@email.com"
+        email: "jhondoezinho@email.com",
+        uuid_firebase: "asdasdsaasd545445"
     }
 
     const validTokens = {
         accessToken: "115fsdfdfd1dfs1fds1",
-        refreshToken: "aadasa454545as54442121"
+        refreshToken: "aadasa454545as54442121",
+        user: {
+          id: 1,
+          email: "testando@123.testando",
+          uuid_firebase: "asdasdsaasd545445"
+        }
     }
 
     jest.spyOn(service, 'me').mockImplementation(() => Promise.resolve(validTokens))

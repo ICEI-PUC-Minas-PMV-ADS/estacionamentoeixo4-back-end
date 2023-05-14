@@ -7,6 +7,7 @@ export declare class EstacionamentoService {
     constructor(clientRepository: PrismaService);
     create(createEstacionamentoDto: CreateEstacionamentoDto): Promise<Estacionamento>;
     findOne(id: number): Promise<Estacionamento>;
+    findEstacionamentosAdm(id_adm: number): Promise<Estacionamento[]>;
     updateOne(id: number, updateEstacionamentoDto: UpdateEstacionamentoDto): Promise<Estacionamento>;
     removeOne(id: number): Promise<any>;
 }

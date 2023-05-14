@@ -18,35 +18,40 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     (0, swagger_1.ApiProperty)({
-        default: 'JhonDoezinho',
         type: 'string',
         description: 'Nome do cliente',
     }),
-    (0, class_validator_1.MaxLength)(8),
+    (0, class_validator_1.MinLength)(10),
     __metadata("design:type", String)
 ], CreateClienteDto.prototype, "name", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.MaxLength)(50),
     (0, swagger_1.ApiProperty)({
-        default: 'jhondoezinho@hotmail.com',
         type: 'string',
         description: 'Email do cliente',
     }),
-    (0, class_validator_1.MaxLength)(50),
     __metadata("design:type", String)
 ], CreateClienteDto.prototype, "email", void 0);
 __decorate([
-    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     (0, swagger_1.ApiProperty)({
-        default: '12232123211',
         type: 'string',
         description: 'CPF do cliente',
     }),
-    (0, class_validator_1.MinLength)(11),
     (0, class_validator_1.MaxLength)(11),
     __metadata("design:type", String)
 ], CreateClienteDto.prototype, "cpf", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, swagger_1.ApiProperty)({
+        type: 'string',
+        description: 'UUid do cliente',
+    }),
+    __metadata("design:type", String)
+], CreateClienteDto.prototype, "uuid_firebase", void 0);
 exports.CreateClienteDto = CreateClienteDto;
 //# sourceMappingURL=create-cliente.dto.js.map

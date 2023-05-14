@@ -16,12 +16,14 @@ const cliente_service_1 = require("../cliente/cliente.service");
 const prisma_service_1 = require("../prisma/prisma.service");
 const accessToken_strategy_1 = require("./strategies/accessToken.strategy");
 const refreshTonek_strategy_1 = require("./strategies/refreshTonek.strategy");
+const manager_service_1 = require("../manager/services/manager.service");
 let AuthModule = class AuthModule {
 };
 AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [config_1.ConfigModule.forRoot(), jwt_1.JwtModule.register({})],
         providers: [
+            manager_service_1.ManagerService,
             auth_service_1.AuthService,
             accessToken_strategy_1.AccessTokenStrategy,
             refreshTonek_strategy_1.RefreshTokenStrategy,

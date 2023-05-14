@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   CACHE_MANAGER,
   ForbiddenException,
   Inject,
@@ -12,6 +11,7 @@ import { Cache } from 'cache-manager';
 import { Cliente } from '@prisma/client';
 import { ClienteService } from '@src/cliente/cliente.service';
 import { AuthDTO } from './dto/me.input';
+import { ManagerService } from '@src/manager/services/manager.service';
 class UserCache {
   refreshToken: string;
   client: Cliente;
@@ -20,7 +20,8 @@ class UserCache {
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly clienteService: ClienteService,
+    private readonly serviceClient: ClienteService,
+    private readonly serviceManager: ManagerService,
     private jwtService: JwtService,
     @Inject(CACHE_MANAGER)
     private readonly authCache: Cache,
@@ -31,52 +32,61 @@ export class AuthService {
 
   async me(auth: AuthDTO) {
     // Check if user exists
-    const user = await this.clienteService.findEmail(auth.email);
+    let user: any = await this.serviceClient.findEmail(auth.email);
 
-    if (!user) throw new BadRequestException('User does not exist');
+    if (!user) {
+      user = await this.serviceManager.findEmail(auth.email);
+      if (!user) {
+        throw new ForbiddenException('Access Denied');
+      }
+    }
 
     //Get the token
-    const tokens = await this.getTokens(user.id, user.name);
+    const tokens = await this.getTokens(user.uuid_firebase, user.name);
 
     //Update the token
-    await this.updateRefreshToken(user.id, tokens.refreshToken);
-
-    return tokens;
+    await this.updateRefreshToken(user.uuid_firebase, tokens.refreshToken);
+    const { id, email, uuid_firebase } = user;
+    return { user: { id, email, uuid_firebase }, ...tokens };
   }
 
-  async logout(id: number) {
-    return await this.authCache.del(`user_${id}`);
+  async logout(uuid_firebase: string) {
+    return await this.authCache.del(`user_${uuid_firebase}`);
   }
 
   hashData(data: string) {
     return argon2.hash(data);
   }
 
-  async updateRefreshToken(userId: number, refreshToken: string) {
-    const user = await this.clienteService.findOne(userId);
-
-    if (!user) throw new BadRequestException('User not found');
+  async updateRefreshToken(userUid: string, refreshToken: string) {
+    let user: any = await this.serviceClient.findOneUuid(userUid);
+    if (!user) {
+      user = await this.serviceManager.findOneUuid(userUid);
+      if (!user) throw new ForbiddenException('Access Denied');
+    }
 
     const hashedRefreshToken = await this.hashData(refreshToken);
 
     //Verify is exist userRefreshToken
-    const cacheUser = await this.authCache.get<UserCache>(`user_${user.id}`);
+    const cacheUser = await this.authCache.get<UserCache>(
+      `user_${user.uuid_firebase}`,
+    );
 
     if (cacheUser) {
-      await this.authCache.del(`user_${user.id}`);
+      await this.authCache.del(`user_${user.uuid_firebase}`);
     }
 
-    await this.authCache.set(`user_${user.id}`, {
+    await this.authCache.set(`user_${user.uuid_firebase}`, {
       user: user,
       refreshToken: hashedRefreshToken,
     });
   }
 
-  async getTokens(userId: number, username: string) {
+  async getTokens(userUUid: string, username: string) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
-          sub: userId,
+          sub: userUUid,
           username,
         },
         {
@@ -86,7 +96,7 @@ export class AuthService {
       ),
       this.jwtService.signAsync(
         {
-          sub: userId,
+          sub: userUUid,
           username,
         },
         {
@@ -95,15 +105,14 @@ export class AuthService {
         },
       ),
     ]);
-
     return {
       accessToken,
       refreshToken,
     };
   }
 
-  async refreshTokens(userId: number, refreshToken: string) {
-    const userCache = await this.authCache.get<UserCache>(`user_${userId}`);
+  async refreshTokens(userUuId: string, refreshToken: string) {
+    const userCache = await this.authCache.get<UserCache>(`user_${userUuId}`);
 
     if (!userCache && !userCache.refreshToken)
       throw new ForbiddenException('Access Denied');
@@ -114,10 +123,14 @@ export class AuthService {
     );
 
     if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
+    let user: any = await this.serviceClient.findOneUuid(userUuId);
 
-    const user = await this.clienteService.findOne(userId);
-    const tokens = await this.getTokens(user.id, user.name);
-    await this.updateRefreshToken(user.id, tokens.refreshToken);
+    if (!user) {
+      user = await this.serviceManager.findOneUuid(userUuId);
+      if (!user) throw new ForbiddenException('Access Denied');
+    }
+    const tokens = await this.getTokens(user.uuid_firebase, user.name);
+    await this.updateRefreshToken(user.uuid_firebase, tokens.refreshToken);
     return tokens;
   }
 }

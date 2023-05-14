@@ -7,10 +7,12 @@ import { ClienteService } from '@src/cliente/cliente.service';
 import { PrismaService } from '@src/prisma/prisma.service';
 import { AccessTokenStrategy } from './strategies/accessToken.strategy';
 import { RefreshTokenStrategy } from './strategies/refreshTonek.strategy';
+import { ManagerService } from '@src/manager/services/manager.service';
 
 @Module({
   imports: [ConfigModule.forRoot(), JwtModule.register({})],
   providers: [
+    ManagerService,
     AuthService,
     AccessTokenStrategy,
     RefreshTokenStrategy,

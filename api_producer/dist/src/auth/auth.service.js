@@ -18,55 +18,65 @@ const argon2 = require("argon2");
 const jwt_1 = require("@nestjs/jwt");
 const config_1 = require("@nestjs/config");
 const cliente_service_1 = require("../cliente/cliente.service");
+const manager_service_1 = require("../manager/services/manager.service");
 class UserCache {
 }
 let AuthService = class AuthService {
-    constructor(clienteService, jwtService, authCache, configService) {
-        this.clienteService = clienteService;
+    constructor(serviceClient, serviceManager, jwtService, authCache, configService) {
+        this.serviceClient = serviceClient;
+        this.serviceManager = serviceManager;
         this.jwtService = jwtService;
         this.authCache = authCache;
         this.configService = configService;
         this.userLogged = null;
     }
     async me(auth) {
-        const user = await this.clienteService.findEmail(auth.email);
-        if (!user)
-            throw new common_1.BadRequestException('User does not exist');
-        const tokens = await this.getTokens(user.id, user.name);
-        await this.updateRefreshToken(user.id, tokens.refreshToken);
-        return tokens;
+        let user = await this.serviceClient.findEmail(auth.email);
+        if (!user) {
+            user = await this.serviceManager.findEmail(auth.email);
+            if (!user) {
+                throw new common_1.ForbiddenException('Access Denied');
+            }
+        }
+        const tokens = await this.getTokens(user.uuid_firebase, user.name);
+        await this.updateRefreshToken(user.uuid_firebase, tokens.refreshToken);
+        const { id, email, uuid_firebase } = user;
+        return Object.assign({ user: { id, email, uuid_firebase } }, tokens);
     }
-    async logout(id) {
-        return await this.authCache.del(`user_${id}`);
+    async logout(uuid_firebase) {
+        return await this.authCache.del(`user_${uuid_firebase}`);
     }
     hashData(data) {
         return argon2.hash(data);
     }
-    async updateRefreshToken(userId, refreshToken) {
-        const user = await this.clienteService.findOne(userId);
-        if (!user)
-            throw new common_1.BadRequestException('User not found');
-        const hashedRefreshToken = await this.hashData(refreshToken);
-        const cacheUser = await this.authCache.get(`user_${user.id}`);
-        if (cacheUser) {
-            await this.authCache.del(`user_${user.id}`);
+    async updateRefreshToken(userUid, refreshToken) {
+        let user = await this.serviceClient.findOneUuid(userUid);
+        if (!user) {
+            user = await this.serviceManager.findOneUuid(userUid);
+            if (!user)
+                throw new common_1.ForbiddenException('Access Denied');
         }
-        await this.authCache.set(`user_${user.id}`, {
+        const hashedRefreshToken = await this.hashData(refreshToken);
+        const cacheUser = await this.authCache.get(`user_${user.uuid_firebase}`);
+        if (cacheUser) {
+            await this.authCache.del(`user_${user.uuid_firebase}`);
+        }
+        await this.authCache.set(`user_${user.uuid_firebase}`, {
             user: user,
             refreshToken: hashedRefreshToken,
         });
     }
-    async getTokens(userId, username) {
+    async getTokens(userUUid, username) {
         const [accessToken, refreshToken] = await Promise.all([
             this.jwtService.signAsync({
-                sub: userId,
+                sub: userUUid,
                 username,
             }, {
                 secret: this.configService.get('JWT_ACCESS_SECRET'),
                 expiresIn: '15m',
             }),
             this.jwtService.signAsync({
-                sub: userId,
+                sub: userUUid,
                 username,
             }, {
                 secret: this.configService.get('JWT_REFRESH_SECRET'),
@@ -78,23 +88,29 @@ let AuthService = class AuthService {
             refreshToken,
         };
     }
-    async refreshTokens(userId, refreshToken) {
-        const userCache = await this.authCache.get(`user_${userId}`);
+    async refreshTokens(userUuId, refreshToken) {
+        const userCache = await this.authCache.get(`user_${userUuId}`);
         if (!userCache && !userCache.refreshToken)
             throw new common_1.ForbiddenException('Access Denied');
         const refreshTokenMatches = await argon2.verify(userCache.refreshToken, refreshToken);
         if (!refreshTokenMatches)
             throw new common_1.ForbiddenException('Access Denied');
-        const user = await this.clienteService.findOne(userId);
-        const tokens = await this.getTokens(user.id, user.name);
-        await this.updateRefreshToken(user.id, tokens.refreshToken);
+        let user = await this.serviceClient.findOneUuid(userUuId);
+        if (!user) {
+            user = await this.serviceManager.findOneUuid(userUuId);
+            if (!user)
+                throw new common_1.ForbiddenException('Access Denied');
+        }
+        const tokens = await this.getTokens(user.uuid_firebase, user.name);
+        await this.updateRefreshToken(user.uuid_firebase, tokens.refreshToken);
         return tokens;
     }
 };
 AuthService = __decorate([
     (0, common_1.Injectable)(),
-    __param(2, (0, common_1.Inject)(common_1.CACHE_MANAGER)),
+    __param(3, (0, common_1.Inject)(common_1.CACHE_MANAGER)),
     __metadata("design:paramtypes", [cliente_service_1.ClienteService,
+        manager_service_1.ManagerService,
         jwt_1.JwtService, Object, config_1.ConfigService])
 ], AuthService);
 exports.AuthService = AuthService;

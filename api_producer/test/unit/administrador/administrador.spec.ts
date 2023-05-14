@@ -24,7 +24,7 @@ fdescribe('Testes unitários - Administradores', () => {
     const createAdministradorMock: CreateManagerDto = {
       nome: "JhonDoezinho",
       email: "jhondoezinho@email.com",
-      id_estacionamento: 2
+      uuid_firebase: "asdasdsaasd545445"
     }
 
     const createAdministradorResponse: Administrador = {
@@ -32,6 +32,7 @@ fdescribe('Testes unitários - Administradores', () => {
       nome: "JhonDoezinho",
       email: "jhondoezinho@email.com",
       createdAt: new Date(),
+      uuid_firebase: "asdasdsaasd545445",
       updatedAt: new Date()
     }
 
@@ -84,13 +85,14 @@ fdescribe('Testes unitários - Administradores', () => {
     const updateAdministradorMock: CreateManagerDto = {
       nome: "JhonDoezinho",
       email: "jhondoezinho@email.com",
-      id_estacionamento: 2
+      uuid_firebase: "sdaasdsaasdasdasd1545"
     }
 
     const updateAdministradorResponse: Administrador = {
       id: 1,
       nome: "JhonDoezinho",
       email: "jhondoezinho@email.com",
+      uuid_firebase: "asdasdsaasd545445",
       createdAt: new Date(),
       updatedAt: new Date()
     }
@@ -110,6 +112,7 @@ fdescribe('Testes unitários - Administradores', () => {
       nome: "JhonDoezinho",
       email: "jhondoezinho@email.com",
       createdAt: new Date(),
+      uuid_firebase: "asdasdsaasd545445",
       updatedAt: new Date()
     }
 

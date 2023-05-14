@@ -40,6 +40,16 @@ export class EstacionamentoController {
     return await this.estacionamentoService.findOne(+id);
   }
 
+  @Get('/:id')
+  @ApiResponse({
+    status: 200,
+    description: 'Recupera um estacionamento',
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  async find(@Param('id') id: string) {
+    return await this.estacionamentoService.findEstacionamentosAdm(+id);
+  }
+
   @Patch('/atualizar/:id')
   @ApiBody({
     description: 'Atualiza estacionamento ',

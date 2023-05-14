@@ -3,25 +3,32 @@ import { ConfigService } from '@nestjs/config';
 import { Cache } from 'cache-manager';
 import { ClienteService } from '@src/cliente/cliente.service';
 import { AuthDTO } from './dto/me.input';
+import { ManagerService } from '@src/manager/services/manager.service';
 export declare class AuthService {
-    private readonly clienteService;
+    private readonly serviceClient;
+    private readonly serviceManager;
     private jwtService;
     private readonly authCache;
     private configService;
-    constructor(clienteService: ClienteService, jwtService: JwtService, authCache: Cache, configService: ConfigService);
+    constructor(serviceClient: ClienteService, serviceManager: ManagerService, jwtService: JwtService, authCache: Cache, configService: ConfigService);
     private userLogged;
     me(auth: AuthDTO): Promise<{
         accessToken: string;
         refreshToken: string;
+        user: {
+            id: any;
+            email: any;
+            uuid_firebase: any;
+        };
     }>;
-    logout(id: number): Promise<void>;
+    logout(uuid_firebase: string): Promise<void>;
     hashData(data: string): Promise<string>;
-    updateRefreshToken(userId: number, refreshToken: string): Promise<void>;
-    getTokens(userId: number, username: string): Promise<{
+    updateRefreshToken(userUid: string, refreshToken: string): Promise<void>;
+    getTokens(userUUid: string, username: string): Promise<{
         accessToken: string;
         refreshToken: string;
     }>;
-    refreshTokens(userId: number, refreshToken: string): Promise<{
+    refreshTokens(userUuId: string, refreshToken: string): Promise<{
         accessToken: string;
         refreshToken: string;
     }>;

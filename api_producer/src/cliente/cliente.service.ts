@@ -61,9 +61,15 @@ export class ClienteService {
         id,
       },
     });
+    return clienteResultDB;
+  }
 
-    if (!clienteResultDB) throw new NotFoundException('Cliente não existente!');
-
+  async findOneUuid(uuid: string) {
+    const clienteResultDB = await this.clientRepository.cliente.findFirst({
+      where: {
+        uuid_firebase: uuid,
+      },
+    });
     return clienteResultDB;
   }
 

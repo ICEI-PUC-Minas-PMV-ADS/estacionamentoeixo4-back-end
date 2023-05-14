@@ -3,5 +3,5 @@ export class CreateManagerModel {
 
   email: string;
 
-  id_estacionamento: number;
+  uuid_firebase: string;
 }

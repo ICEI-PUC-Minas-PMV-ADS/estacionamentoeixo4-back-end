@@ -28,6 +28,9 @@ let EstacionamentoController = class EstacionamentoController {
     async findOne(id) {
         return await this.estacionamentoService.findOne(+id);
     }
+    async find(id) {
+        return await this.estacionamentoService.findEstacionamentosAdm(+id);
+    }
     async update(id, updateEstacionamentoDto) {
         return await this.estacionamentoService.updateOne(+id, updateEstacionamentoDto);
     }
@@ -63,6 +66,18 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], EstacionamentoController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Get)('/:id'),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Recupera um estacionamento',
+    }),
+    (0, swagger_1.ApiResponse)({ status: 403, description: 'Forbidden.' }),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], EstacionamentoController.prototype, "find", null);
 __decorate([
     (0, common_1.Patch)('/atualizar/:id'),
     (0, swagger_1.ApiBody)({

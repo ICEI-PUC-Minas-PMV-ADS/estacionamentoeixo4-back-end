@@ -17,7 +17,7 @@ let ManagerService = class ManagerService {
         this.managerRepository = managerRepository;
     }
     async create(CreateManagerDto) {
-        const { nome, email } = CreateManagerDto;
+        const { nome, email, uuid_firebase } = CreateManagerDto;
         const emailExists = await this.managerRepository.administrador.findFirst({
             where: { email },
         });
@@ -28,9 +28,34 @@ let ManagerService = class ManagerService {
             data: {
                 nome,
                 email,
+                uuid_firebase,
             },
         });
         return administrador;
+    }
+    async findEmail(email) {
+        const clienteResultDB = await this.managerRepository.administrador.findUnique({
+            where: {
+                email,
+            },
+        });
+        return clienteResultDB;
+    }
+    async findOne(id) {
+        const clienteResultDB = await this.managerRepository.administrador.findFirst({
+            where: {
+                id: id,
+            },
+        });
+        return clienteResultDB;
+    }
+    async findOneUuid(uuid) {
+        const clienteResultDB = await this.managerRepository.administrador.findFirst({
+            where: {
+                uuid_firebase: uuid,
+            },
+        });
+        return clienteResultDB;
     }
     async getAll() {
         try {
