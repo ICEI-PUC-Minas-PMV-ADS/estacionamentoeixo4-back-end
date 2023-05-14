@@ -25,6 +25,7 @@ model Cliente {
 model Veiculo {
   id         Int      @id @default(autoincrement())
   placa      String   @db.VarChar(10)
+  tipo       String   @db.VarChar(10)
   modelo     String   @db.VarChar(20)
   cliente    Cliente  @relation(fields: [id_cliente], references: [id])
   id_cliente Int
@@ -83,4 +84,20 @@ model Endereco {
   uf                String         @db.Char(2)
   estacionamento    Estacionamento @relation(fields: [id_estacionamento], references: [id])
   id_estacionamento Int
-} 
+
+  // Nome da tabela @@map
+  @@map("endereco")
+}
+
+model Reserva {
+id                Int            @id @default(autoincrement())
+id_cliente  Int 
+id_estacionamento Int
+duracao Int
+horario_reserva DateTime
+id_veiculo Int
+cancelado_em DateTime
+
+// Nome da tabela @@map
+  @@map("reserva")
+}

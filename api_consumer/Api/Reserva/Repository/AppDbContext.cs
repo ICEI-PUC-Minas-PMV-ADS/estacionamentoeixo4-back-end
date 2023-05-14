@@ -8,18 +8,28 @@ namespace api_consumer.Api.Reserva.Repository
         public AppDbContext(DbContextOptions options) : base(options) { }
 
         public DbSet<ReservaEntity> reserva { get; set; }
+        public DbSet<AvaliacaoEntity> avaliacao { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ReservaEntity>(entity =>
             {
-                entity.HasKey(r => new { r.id_cliente, r.id_estacionamento });
+                entity.HasKey(r => new { r.id_reserva });
                 entity.Property(e => e.id_cliente).IsRequired();
                 entity.Property(e => e.id_estacionamento).IsRequired();
                 entity.Property(e => e.duracao).IsRequired();
                 entity.Property(e => e.horario_reserva).IsRequired();
                 entity.Property(e => e.id_veiculo).IsRequired();
                 entity.Property(e => e.canceledAt);
+            });
+
+            modelBuilder.Entity<AvaliacaoEntity>(entity =>
+            {
+                entity.HasKey(r => new { r.id_avaliacao });
+                entity.Property(e => e.id_cliente).IsRequired();
+                entity.Property(e => e.id_estacionamento).IsRequired();
+                entity.Property(e => e.avaliacao).IsRequired();
+                entity.Property(e => e.comentario).IsRequired();
             });
 
             // Debater cominicação com o outro back-end

@@ -16,6 +16,15 @@ export class UpdateVeiculoDto extends PartialType(CreateVeiculoDto) {
   @IsString()
   @ApiProperty({
     type: 'string',
+    default: 'Carro',
+    description: 'Tipo do veículo',
+  })
+  @MaxLength(10)
+  tipo: string;
+
+  @IsString()
+  @ApiProperty({
+    type: 'string',
     default: 'Fox Wolksvagem',
     description: 'Modelo do veículo',
   })
