@@ -3,7 +3,6 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class AuthDTO {
   @ApiProperty({
-    default: 1,
     type: 'string',
     description: 'Id do cliente',
   })
@@ -13,7 +12,6 @@ export class AuthDTO {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    default: 'saxnovaesgomes@gmail.com',
     type: 'string',
     description: 'Email do cliente',
   })
