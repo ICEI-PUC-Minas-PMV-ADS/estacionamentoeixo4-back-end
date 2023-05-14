@@ -27,7 +27,8 @@ fdescribe('Testes unitários - Clientes', () => {
     const createClienteMock: CreateClienteDto = {
       name: "JhonDoezinho",
       email: "doezinhosilva@email.com.br",
-      cpf: "42022522210"
+      cpf: "42022522210",
+      uuid_firebase: "asddsaASDSDAASDDS5265"
     }
 
     const createClienteResponse = {
@@ -35,6 +36,7 @@ fdescribe('Testes unitários - Clientes', () => {
       name: 'JhonDoezinho',
       email: 'doezinhosilva@email.com.br',
       cpf: '42022522210',
+      uuid_firebase: "asdasdsaasd545445",
       createdAt: new Date(),
       updatedAt: new Date()
     }
@@ -62,6 +64,7 @@ fdescribe('Testes unitários - Clientes', () => {
       name: 'JhonDoezinho',
       email: 'doezinhosilva@email.com.br',
       cpf: '42022522210',
+      uuid_firebase: "asdasdsaasd545445",
       createdAt: new Date(),
       updatedAt: new Date()
     }
@@ -84,12 +87,14 @@ fdescribe('Testes unitários - Clientes', () => {
         email: 'doezinhosilva@email.com.br',
         cpf: '42022522210',
         createdAt: new Date(),
+        uuid_firebase: "asdasdsaasd545445",
         updatedAt: new Date()
       },
       {
         id: 2,
         name: 'JhonDoezinho2',
         email: 'doezinhosilva2@email.com.br',
+        uuid_firebase: "asdasdsaasd545445",
         cpf: '42022522222',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -99,6 +104,7 @@ fdescribe('Testes unitários - Clientes', () => {
         name: 'JhonDoezinho3',
         email: 'doezinhosilva3@email.com.br',
         cpf: '42022522233',
+        uuid_firebase: "asdasdsaasd545445",
         createdAt: new Date(),
         updatedAt: new Date()
       }
@@ -120,6 +126,7 @@ fdescribe('Testes unitários - Clientes', () => {
       email: 'doezinhosilva3@email.com.br',
       cpf: '42022522233',
       createdAt: new Date(),
+      uuid_firebase: "asdasdsaasd545445",
       updatedAt: new Date()
     }
 
@@ -137,6 +144,7 @@ fdescribe('Testes unitários - Clientes', () => {
       id: 22,
       name: 'JhonDoezinho3',
       email: 'doezinhosilva3@email.com.br',
+      uuid_firebase: "asdasdsaasd545445",
       cpf: '42022522233',
       createdAt: new Date(),
       updatedAt: new Date()
@@ -156,6 +164,7 @@ fdescribe('Testes unitários - Clientes', () => {
       id: 22,
       name: 'JhonDoezinho3',
       email: 'doezinhosilva3@email.com.br',
+      uuid_firebase: "asdasdsaasd545445",
       cpf: '42022522233',
       createdAt: new Date(),
       updatedAt: new Date()
