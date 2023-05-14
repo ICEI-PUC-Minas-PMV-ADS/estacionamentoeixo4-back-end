@@ -56,6 +56,7 @@ jobs:
           compose-file: "../../kafka/docker-compose.yml"
       
       - name: Build project
+        working-directory: api_producer
         run: yarn start:dev
 
       - name: Run integration tests
