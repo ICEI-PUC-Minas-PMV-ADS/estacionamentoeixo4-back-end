@@ -54,10 +54,6 @@ jobs:
       - uses: isbang/compose-action@v1.4.1
         with:
           compose-file: "../../kafka/docker-compose.yml"
-      
-      - name: Build project
-        working-directory: api_producer
-        run: yarn start:dev
 
       - name: Run integration tests
         working-directory: api_producer/test
