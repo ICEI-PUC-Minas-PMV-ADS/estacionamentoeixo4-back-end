@@ -4,6 +4,7 @@
 .env
 package-lock.json
 */node_modules
+*/dist
 api_producer/dist
 api_producer/package-lock.json
 api_producer/yarn.lock

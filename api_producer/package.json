@@ -34,6 +34,7 @@
     "@prisma/client": "^4.12.0",
     "@types/kafka-node": "^3.0.0",
     "argon2": "^0.30.3",
+    "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "cache-manager": "^5.2.0",
     "cache-manager-redis-store": "^3.0.1",

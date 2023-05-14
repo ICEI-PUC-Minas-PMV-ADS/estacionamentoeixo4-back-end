@@ -11,27 +11,24 @@ export class CreateClienteDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    default: 'JhonDoezinho',
     type: 'string',
     description: 'Nome do cliente',
   })
-  @MaxLength(8)
+  @MaxLength(50)
   name: string;
 
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    default: 'jhondoezinho@hotmail.com',
     type: 'string',
     description: 'Email do cliente',
   })
   @MaxLength(50)
   email: string;
 
-  @IsInt()
+  @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    default: '12232123211',
     type: 'string',
     description: 'CPF do cliente',
   })

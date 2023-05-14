@@ -125,4 +125,11 @@ export class ManagerService {
 
     return deletedManager;
   }
+
+  async removeAll() {
+    const deleteAllManager =
+      await this.managerRepository.administrador.deleteMany();
+
+    return deleteAllManager;
+  }
 }

@@ -108,4 +108,10 @@ export class ClienteService {
 
     return clienteDeleteResult;
   }
+
+  async removeAll() {
+    const clienteDeleteResult = await this.clientRepository.cliente.deleteMany();
+
+    return clienteDeleteResult;
+  }
 }

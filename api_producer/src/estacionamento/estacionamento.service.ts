@@ -10,7 +10,7 @@ import { UpdateEstacionamentoDto } from './dto/update-estacionamento.dto';
 
 @Injectable()
 export class EstacionamentoService {
-  constructor(private readonly clientRepository: PrismaService) {}
+  constructor(private readonly clientRepository: PrismaService) { }
 
   /**
    * @function Create Estacionamento
@@ -101,5 +101,12 @@ export class EstacionamentoService {
       id: id,
       message: `Estacionamento com o id: ${id} foi deletado com sucesso.`,
     };
+  }
+
+  async removeAll(): Promise<any> {
+    const deletedEstacionamento =
+      await this.clientRepository.estacionamento.deleteMany();
+
+    return deletedEstacionamento
   }
 }

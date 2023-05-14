@@ -112,4 +112,10 @@ export class VeiculoService {
 
     return veiculoDeleteResult;
   }
+
+  async removeAll() {
+    const veiculoDeleteResult = this.veiculoRepository.veiculo.deleteMany();
+
+    return veiculoDeleteResult;
+  }
 }
