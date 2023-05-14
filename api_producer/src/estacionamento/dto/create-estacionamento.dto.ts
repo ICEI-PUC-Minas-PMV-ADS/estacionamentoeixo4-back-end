@@ -7,16 +7,16 @@ import {
   IsDecimal,
   IsNotEmpty,
 } from 'class-validator';
+import { Prisma } from '@prisma/client';
 
 export class CreateEstacionamentoDto {
   @IsDecimal()
   @IsNotEmpty()
   @ApiProperty({
     type: 'decimal',
-    minimum: 6,
-    default: 12340,
+    minimum: 6
   })
-  preco: number;
+  preco: Prisma.Decimal;
 
   @IsInt()
   @IsNotEmpty()

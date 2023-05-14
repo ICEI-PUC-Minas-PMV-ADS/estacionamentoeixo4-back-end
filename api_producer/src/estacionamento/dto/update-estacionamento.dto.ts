@@ -9,6 +9,7 @@ import {
 } from 'class-validator';
 import { CreateEstacionamentoDto } from './create-estacionamento.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { Prisma } from '@prisma/client';
 
 export class UpdateEstacionamentoDto extends PartialType(
   CreateEstacionamentoDto,
@@ -17,16 +18,14 @@ export class UpdateEstacionamentoDto extends PartialType(
   @IsNotEmpty()
   @ApiProperty({
     type: 'decimal',
-    minimum: 6,
-    default: 12340,
+    minimum: 6
   })
-  preco: number;
+  preco: Prisma.Decimal;
 
   @IsInt()
   @IsNotEmpty()
   @ApiProperty({
-    type: 'number',
-    default: 12,
+    type: 'number'
   })
   vagas_preferenciais: number;
 
