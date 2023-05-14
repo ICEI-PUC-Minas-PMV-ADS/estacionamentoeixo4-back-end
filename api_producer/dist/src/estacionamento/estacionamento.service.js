@@ -68,6 +68,10 @@ let EstacionamentoService = class EstacionamentoService {
             message: `Estacionamento com o id: ${id} foi deletado com sucesso.`,
         };
     }
+    async removeAll() {
+        const deletedEstacionamento = await this.clientRepository.estacionamento.deleteMany();
+        return deletedEstacionamento;
+    }
 };
 EstacionamentoService = __decorate([
     (0, common_1.Injectable)(),

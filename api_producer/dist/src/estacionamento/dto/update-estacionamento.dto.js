@@ -14,6 +14,7 @@ const mapped_types_1 = require("@nestjs/mapped-types");
 const class_validator_1 = require("class-validator");
 const create_estacionamento_dto_1 = require("./create-estacionamento.dto");
 const swagger_1 = require("@nestjs/swagger");
+const client_1 = require("@prisma/client");
 class UpdateEstacionamentoDto extends (0, mapped_types_1.PartialType)(create_estacionamento_dto_1.CreateEstacionamentoDto) {
 }
 __decorate([
@@ -21,17 +22,15 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, swagger_1.ApiProperty)({
         type: 'decimal',
-        minimum: 6,
-        default: 12340,
+        minimum: 6
     }),
-    __metadata("design:type", Number)
+    __metadata("design:type", client_1.Prisma.Decimal)
 ], UpdateEstacionamentoDto.prototype, "preco", void 0);
 __decorate([
     (0, class_validator_1.IsInt)(),
     (0, class_validator_1.IsNotEmpty)(),
     (0, swagger_1.ApiProperty)({
-        type: 'number',
-        default: 12,
+        type: 'number'
     }),
     __metadata("design:type", Number)
 ], UpdateEstacionamentoDto.prototype, "vagas_preferenciais", void 0);

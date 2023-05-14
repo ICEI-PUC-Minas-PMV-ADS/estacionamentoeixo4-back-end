@@ -44,7 +44,7 @@ __decorate([
         default: 1,
     }),
     (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
+    __metadata("design:type", Number)
 ], UpdateVeiculoDto.prototype, "id_cliente", void 0);
 exports.UpdateVeiculoDto = UpdateVeiculoDto;
 //# sourceMappingURL=update-veiculo.dto.js.map

@@ -3,6 +3,6 @@ declare const UpdateVeiculoDto_base: import("@nestjs/mapped-types").MappedType<P
 export declare class UpdateVeiculoDto extends UpdateVeiculoDto_base {
     placa: string;
     modelo: string;
-    id_cliente: string;
+    id_cliente: number;
 }
 export {};

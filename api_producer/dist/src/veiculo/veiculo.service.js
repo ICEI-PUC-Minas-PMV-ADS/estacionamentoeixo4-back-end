@@ -77,6 +77,10 @@ let VeiculoService = class VeiculoService {
         await this.veiculoCache.del('veiculos_cache');
         return veiculoDeleteResult;
     }
+    async removeAll() {
+        const veiculoDeleteResult = this.veiculoRepository.veiculo.deleteMany();
+        return veiculoDeleteResult;
+    }
 };
 VeiculoService = __decorate([
     (0, common_1.Injectable)(),

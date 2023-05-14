@@ -82,6 +82,10 @@ let ClienteService = class ClienteService {
         }
         return clienteDeleteResult;
     }
+    async removeAll() {
+        const clienteDeleteResult = await this.clientRepository.cliente.deleteMany();
+        return clienteDeleteResult;
+    }
 };
 ClienteService = __decorate([
     (0, common_1.Injectable)(),

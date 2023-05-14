@@ -9,4 +9,5 @@ export declare class EstacionamentoService {
     findOne(id: number): Promise<Estacionamento>;
     updateOne(id: number, updateEstacionamentoDto: UpdateEstacionamentoDto): Promise<Estacionamento>;
     removeOne(id: number): Promise<any>;
+    removeAll(): Promise<any>;
 }

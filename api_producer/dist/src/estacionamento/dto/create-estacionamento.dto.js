@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateEstacionamentoDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
+const client_1 = require("@prisma/client");
 class CreateEstacionamentoDto {
 }
 __decorate([
@@ -19,10 +20,9 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, swagger_1.ApiProperty)({
         type: 'decimal',
-        minimum: 6,
-        default: 12340,
+        minimum: 6
     }),
-    __metadata("design:type", Number)
+    __metadata("design:type", client_1.Prisma.Decimal)
 ], CreateEstacionamentoDto.prototype, "preco", void 0);
 __decorate([
     (0, class_validator_1.IsInt)(),

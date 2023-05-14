@@ -18,18 +18,16 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     (0, swagger_1.ApiProperty)({
-        default: 'JhonDoezinho',
         type: 'string',
         description: 'Nome do cliente',
     }),
-    (0, class_validator_1.MaxLength)(8),
+    (0, class_validator_1.MaxLength)(50),
     __metadata("design:type", String)
 ], CreateClienteDto.prototype, "name", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     (0, swagger_1.ApiProperty)({
-        default: 'jhondoezinho@hotmail.com',
         type: 'string',
         description: 'Email do cliente',
     }),
@@ -37,10 +35,9 @@ __decorate([
     __metadata("design:type", String)
 ], CreateClienteDto.prototype, "email", void 0);
 __decorate([
-    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     (0, swagger_1.ApiProperty)({
-        default: '12232123211',
         type: 'string',
         description: 'CPF do cliente',
     }),

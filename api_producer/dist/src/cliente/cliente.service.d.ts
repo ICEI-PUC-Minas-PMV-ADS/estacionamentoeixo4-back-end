@@ -13,4 +13,5 @@ export declare class ClienteService {
     findEmail(email: string): Promise<Cliente>;
     update(id: number, updateClienteDto: UpdateClienteDto): Promise<Cliente>;
     remove(id: number): Promise<Cliente>;
+    removeAll(): Promise<import(".prisma/client").Prisma.BatchPayload>;
 }

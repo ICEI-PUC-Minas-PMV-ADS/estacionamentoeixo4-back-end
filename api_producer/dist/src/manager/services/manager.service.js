@@ -92,6 +92,10 @@ let ManagerService = class ManagerService {
         });
         return deletedManager;
     }
+    async removeAll() {
+        const deleteAllManager = await this.managerRepository.administrador.deleteMany();
+        return deleteAllManager;
+    }
 };
 ManagerService = __decorate([
     (0, common_1.Injectable)(),

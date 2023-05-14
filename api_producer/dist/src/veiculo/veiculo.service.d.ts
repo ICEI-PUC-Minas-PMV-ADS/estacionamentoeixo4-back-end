@@ -12,4 +12,5 @@ export declare class VeiculoService {
     findOne(id: number): Promise<any>;
     update(id: number, updateVeiculoDto: UpdateVeiculoDto): Promise<any>;
     remove(id: number): Promise<any>;
+    removeAll(): Promise<any>;
 }
