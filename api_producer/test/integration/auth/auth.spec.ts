@@ -12,6 +12,7 @@ import axios from 'axios';
 import { AuthDTO } from "@src/auth/dto/me.input";
 import { CreateClienteDto } from "@src/cliente/dto/create-cliente.dto";
 import { ClienteController } from "@src/cliente/cliente.controller";
+import * as util from "util"
 
 const BASE_URL = (uri: string) => `http://localhost:${process.env.PORT}/api_producer/auth/${uri}`
 
@@ -51,19 +52,22 @@ describe('AuthControler', () => {
         await app.close()
     })
 
-    it('Deve fazer retornar um objeto com accessToken e refreshToken', async () => {
+    it('Deve retornar um objeto com accessToken e refreshToken', async () => {
+
+      const cpf = `${Math.random().toString().substring(5, 8)}44433322`
+      const email = `teste.${Math.random().toString().substring(5, 9)}@fulano.com`   
 
       const clienteData: CreateClienteDto = {
         name: "Apenas Fulano",
-        email: "teste.email.123@fulano.com",
-        cpf: "55544433322"
+        email,
+        cpf
       }
 
       const cliente = await clienteService.create(clienteData)
 
       const meData: AuthDTO = {
-        id: 15454121,
-        email: "teste.email.123@fulano.com"
+        id: +cliente?.id,
+        email
       }
 
       const response = await axios.post(`${BASE_URL("me")}`, meData).then(res => res.data)
