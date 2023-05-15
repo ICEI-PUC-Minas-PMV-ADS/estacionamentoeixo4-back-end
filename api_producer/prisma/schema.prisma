@@ -96,7 +96,7 @@ id_estacionamento Int
 duracao Int
 horario_reserva DateTime
 id_veiculo Int
-cancelado_em DateTime
+canceledAt DateTime
 
 // Nome da tabela @@map
   @@map("reserva")
