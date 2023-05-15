@@ -89,15 +89,15 @@ model Endereco {
   @@map("endereco")
 }
 
-model Reserva {
-id                Int            @id @default(autoincrement())
-id_cliente  Int 
-id_estacionamento Int
-duracao Int
-horario_reserva DateTime
-id_veiculo Int
-canceledAt DateTime
+//model Reserva {
+//id                Int            @id @default(autoincrement())
+//id_cliente  Int 
+//id_estacionamento Int
+//duracao Int
+//horario_reserva DateTime
+//id_veiculo Int
+//canceledAt DateTime
 
 // Nome da tabela @@map
-  @@map("reserva")
-}
+//  @@map("reserva")
+//}
