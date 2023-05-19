@@ -19,6 +19,7 @@ export class EstacionamentoService {
    */
   async create(
     createEstacionamentoDto: CreateEstacionamentoDto,
+    id: number,
   ): Promise<Estacionamento> {
     const alreadyExists: Estacionamento =
       await this.clientRepository.estacionamento.findFirst({
@@ -37,6 +38,20 @@ export class EstacionamentoService {
     const createEstacionamento: Estacionamento =
       await this.clientRepository.estacionamento.create({
         data: createEstacionamentoDto,
+      });
+
+    //EstacionamentoAndAdministrador
+    await this.clientRepository.estacionamentoAndAdministradores
+      .create({
+        data: {
+          id_administrador: id,
+          id_estacionamento: createEstacionamento.id,
+        },
+      })
+      .catch((err) => {
+        throw new InternalServerErrorException(
+          `Não foi possível criar o estacionamento.` + err,
+        );
       });
 
     if (!createEstacionamento) {
