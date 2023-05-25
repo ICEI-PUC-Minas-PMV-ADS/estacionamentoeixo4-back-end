@@ -72,6 +72,19 @@ CREATE TABLE "endereco" (
     CONSTRAINT "endereco_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "reserva" (
+    "id" SERIAL NOT NULL,
+    "id_cliente" INTEGER NOT NULL,
+    "id_estacionamento" INTEGER NOT NULL,
+    "duracao" INTEGER NOT NULL,
+    "horario_reserva" TIMESTAMP(3) NOT NULL,
+    "id_veiculo" INTEGER NOT NULL,
+    "canceledAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "reserva_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "cliente_email_key" ON "cliente"("email");
 

@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '@src/prisma/prisma.service';
 import { CreateEstacionamentoDto } from './dto/create-estacionamento.dto';
-import { Estacionamento } from '@prisma/client';
 import { UpdateEstacionamentoDto } from './dto/update-estacionamento.dto';
+import Estacionamento from './entity/Estacionamento';
 
 @Injectable()
 export class EstacionamentoService {
