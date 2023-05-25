@@ -110,9 +110,9 @@ export class AuthService {
   async refreshTokens(userUuId: string, refreshToken: string) {
     const userCache = await this.authCache.get<UserCache>(`user_${userUuId}`);
 
-    if (!userCache && !userCache.refreshToken)
+    if (!userCache && !userCache.refreshToken) {
       throw new ForbiddenException('Access Denied');
-
+    }
     const refreshTokenMatches = await argon2.verify(
       userCache.refreshToken,
       refreshToken,
