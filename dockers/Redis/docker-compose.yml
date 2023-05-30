@@ -1,0 +1,8 @@
+version: '3.8'
+name: redis
+services:
+
+
+networks:
+  backend-networks:
+    driver: bridge

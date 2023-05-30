@@ -1,23 +1,8 @@
-import { KafkaClientOptions } from './../../node_modules/kafka-node/types/index.d';
-import { KafkaClient, Producer } from 'kafka-node';
-import {
-  Controller,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Inject,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Producer } from 'kafka-node';
+import { Controller, Post, Body, Patch, OnModuleInit } from '@nestjs/common';
 import { CreateReservaDto } from './dto/create-reserva.dto';
 import { CanceledReservaDto } from './dto/cancelar-reserva.dto';
-import {
-  ClientKafka,
-  KafkaOptions,
-  MessagePattern,
-  Payload,
-  Transport,
-} from '@nestjs/microservices';
+
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { KafkaService } from './kafka.service';
 

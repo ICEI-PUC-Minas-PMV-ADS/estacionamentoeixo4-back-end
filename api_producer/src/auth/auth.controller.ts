@@ -55,7 +55,6 @@ export class AuthController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   logout(@Req() req: Request) {
-    console.log(req.user);
     this.authService.logout(req.user['sub']);
   }
 }

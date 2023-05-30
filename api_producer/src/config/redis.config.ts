@@ -1,7 +1,7 @@
-import { redisStore } from 'cache-manager-redis-store';
+import * as redisStore from 'cache-manager-redis-store';
 import { RedisClientOptions } from 'redis';
 import 'dotenv/config';
-import { CacheModuleOptions } from '@nestjs/common';
+import { CacheModuleOptions } from '@nestjs/cache-manager';
 
 export const configRedisCache: CacheModuleOptions<RedisClientOptions> = {
   store: redisStore,

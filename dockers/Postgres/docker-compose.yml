@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  pg:
+    image: postgres:12
+    container_name: pg
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: whypark
+      POSTGRES_PASSWORD: whypark123
+      POSTGRES_DB: db_why_park
+    cap_add:
+      - SYS_NICE
+    networks:
+      - backend-networks
+    volumes:
+      - postgres-db-data:/var/lib/postgres
+volumes:
+  postgres-db-data:
+
+networks:
+  backend-networks:
+    driver: bridge
