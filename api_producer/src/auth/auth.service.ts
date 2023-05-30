@@ -7,7 +7,7 @@ import { ClienteService } from '@src/cliente/cliente.service';
 import { AuthDTO } from './dto/me.input';
 import Cliente from '@src/cliente/entity/Cliente';
 import { AdministadorService } from '@src/administrador/services/administrador.service';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
 class UserCache {
   refreshToken: string;
   client: Cliente;
@@ -20,9 +20,9 @@ export class AuthService {
     private readonly serviceManager: AdministadorService,
     private jwtService: JwtService,
     @Inject(CACHE_MANAGER)
-    private readonly authCache: Cache,
+    private readonly authCache: CacheStore,
     private configService: ConfigService,
-  ) {}
+  ) { }
 
   private userLogged: UserCache = null;
 
@@ -35,7 +35,7 @@ export class AuthService {
       if (!user) {
         throw new ForbiddenException('Access Denied');
       }
-    }
+    } 
 
     //Get the token
     const tokens = await this.getTokens(user.uuid_firebase, user.name);

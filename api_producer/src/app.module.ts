@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { RedisClientOptions } from 'redis';
 import { configRedisCache } from '@config/redis.config';
 import { RouterModule } from './router/router.module';
+import { DevtoolsModule } from '@nestjs/devtools-integration';
 
 @Module({
   imports: [
@@ -12,4 +13,4 @@ import { RouterModule } from './router/router.module';
     RouterModule,
   ],
 })
-export class AppModule {}
+export class AppModule { }

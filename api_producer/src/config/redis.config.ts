@@ -4,7 +4,7 @@ import 'dotenv/config';
 import { CacheModuleOptions } from '@nestjs/cache-manager';
 
 export const configRedisCache: CacheModuleOptions<RedisClientOptions> = {
-  store: redisStore,
+  store: redisStore.redisStore,
   host: process.env.HOST_REDIS,
   password: process.env.PWD_REDIS,
   port: Number(process.env.PORT_REDIS),

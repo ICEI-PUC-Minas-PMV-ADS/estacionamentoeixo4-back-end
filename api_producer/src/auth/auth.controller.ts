@@ -1,6 +1,5 @@
 import {
   Controller,
-  CacheInterceptor,
   UseInterceptors,
   Body,
   Post,
@@ -14,11 +13,12 @@ import { RefreshTokenGuard } from '@src/common/guards/refreshToken.guard';
 import { Request } from 'express';
 import { AccessTokenGuard } from '@src/common/guards/accessToken.guard';
 import { ApiResponse, ApiTags, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
   @UseInterceptors(CacheInterceptor)
   @Post('me')
   @ApiBody({ type: AuthDTO, description: 'Atualiza o refreshToken' })
