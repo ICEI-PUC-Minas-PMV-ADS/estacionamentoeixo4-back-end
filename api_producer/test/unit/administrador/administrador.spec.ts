@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CACHE_MANAGER } from '@nestjs/common';
 import { PrismaService } from '@src/prisma/prisma.service';
 import { Administrador } from '@prisma/client';
-import { CreateManagerDto } from '@src/manager/dto/create-manager.dto';
-import { AdministadorService } from '@src/manager/services/manager.service';
+import { CreateManagerDto } from '@src/administrador/dto/create-manager.dto';
+import { AdministadorService } from '@src/administrador/services/administrador.service';
 
 fdescribe('Testes unitários - Administradores', () => {
   let service: AdministadorService;
