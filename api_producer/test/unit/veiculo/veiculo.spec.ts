@@ -26,7 +26,8 @@ fdescribe('Testes unitários - Veículos', () => {
     const createVeiculoMock: CreateVeiculoDto = {
       placa: "oab-xb33",
       modelo: "Fox Volkswagen",
-      id_cliente: 2
+      id_cliente: 2,
+      tipo: "Carro"
     }
 
     const createVeiculoResponse: Veiculo = {
@@ -35,7 +36,8 @@ fdescribe('Testes unitários - Veículos', () => {
       modelo: "Fox Volkswagen",
       id_cliente: 2,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      tipo: "Carro"
     }
 
     jest.spyOn(service, 'create').mockImplementation(() => Promise.resolve(createVeiculoResponse))
@@ -56,7 +58,8 @@ fdescribe('Testes unitários - Veículos', () => {
         modelo: "Modelo 1",
         id_cliente: 44,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        tipo: "Carro"
       },
       {
         id: 2,
@@ -64,7 +67,8 @@ fdescribe('Testes unitários - Veículos', () => {
         modelo: "Modelo 2",
         id_cliente: 22,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        tipo: "Carro"
       },
       {
         id: 3,
@@ -72,7 +76,8 @@ fdescribe('Testes unitários - Veículos', () => {
         modelo: "Modelo 3",
         id_cliente: 10,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        tipo: "Carro"
       }
     ]
 
@@ -93,7 +98,8 @@ fdescribe('Testes unitários - Veículos', () => {
       modelo: "Fox Volkswagen",
       id_cliente: 33,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      tipo: "Carro"
     }
 
     jest.spyOn(service, 'findOne').mockImplementation(() => Promise.resolve(createVeiculoResponse))
@@ -109,7 +115,8 @@ fdescribe('Testes unitários - Veículos', () => {
     const updateVeiculoMock: CreateVeiculoDto = {
       placa: "oab-xb33",
       modelo: "Fox Volkswagen",
-      id_cliente: 2
+      id_cliente: 2,
+      tipo: "Carro"
     }
 
     const updateVeiculoResponse: Veiculo = {
@@ -118,7 +125,8 @@ fdescribe('Testes unitários - Veículos', () => {
       modelo: "Fox Volkswagen",
       id_cliente: 2,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      tipo: "Carro"
     }
 
     jest.spyOn(service, 'update').mockImplementation(() => Promise.resolve(updateVeiculoResponse))
@@ -139,7 +147,8 @@ fdescribe('Testes unitários - Veículos', () => {
       modelo: "Fox Volkswagen",
       id_cliente: 2,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      tipo: "Carro"
     }
 
     jest.spyOn(service, 'remove').mockImplementation(() => Promise.resolve(deletedVeiculoResponse))
