@@ -1,5 +1,5 @@
 # Base image
-FROM node:18
+FROM node:latest
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -17,5 +17,7 @@ COPY . .
 # Creates a "dist" folder with the production build
 RUN npx prisma generate
 RUN npm run build
+
+EXPOSE 80
 # Start the server using the production build
 CMD [ "npm", "start" ]
