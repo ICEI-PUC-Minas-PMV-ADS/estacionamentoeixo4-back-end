@@ -1,17 +1,13 @@
-import {
-  CACHE_MANAGER,
-  ForbiddenException,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Cache } from 'cache-manager';
-import { Cliente } from '@prisma/client';
 import { ClienteService } from '@src/cliente/cliente.service';
 import { AuthDTO } from './dto/me.input';
-import { ManagerService } from '@src/manager/services/manager.service';
+import Cliente from '@src/cliente/entity/Cliente';
+import { AdministadorService } from '@src/administrador/services/administrador.service';
+import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
 class UserCache {
   refreshToken: string;
   client: Cliente;
@@ -21,12 +17,12 @@ class UserCache {
 export class AuthService {
   constructor(
     private readonly serviceClient: ClienteService,
-    private readonly serviceManager: ManagerService,
+    private readonly serviceManager: AdministadorService,
     private jwtService: JwtService,
     @Inject(CACHE_MANAGER)
-    private readonly authCache: Cache,
+    private readonly authCache: CacheStore,
     private configService: ConfigService,
-  ) {}
+  ) { }
 
   private userLogged: UserCache = null;
 
@@ -39,7 +35,7 @@ export class AuthService {
       if (!user) {
         throw new ForbiddenException('Access Denied');
       }
-    }
+    } 
 
     //Get the token
     const tokens = await this.getTokens(user.uuid_firebase, user.name);
@@ -114,9 +110,9 @@ export class AuthService {
   async refreshTokens(userUuId: string, refreshToken: string) {
     const userCache = await this.authCache.get<UserCache>(`user_${userUuId}`);
 
-    if (!userCache && !userCache.refreshToken)
+    if (!userCache && !userCache.refreshToken) {
       throw new ForbiddenException('Access Denied');
-
+    }
     const refreshTokenMatches = await argon2.verify(
       userCache.refreshToken,
       refreshToken,

@@ -8,7 +8,7 @@ package-lock.json
 */api_producer/dist
 dist/
 /api_producer/dist
-/api_producer/dist/
+/api_producer/node_modules
 api_producer/dist
 api_producer/package-lock.json
 api_producer/yarn.lock

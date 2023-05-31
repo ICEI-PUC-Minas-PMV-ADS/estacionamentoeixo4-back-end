@@ -7,16 +7,16 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { ManagerService } from '../services/manager.service';
+import { AdministadorService } from '../services/administrador.service';
 import { CreateManagerDto } from '../dto/create-manager.dto';
 import { UpdateManagerDto } from '../dto/update-manager.dto';
 import { ManagerMapper } from '../mapper/manager.mapper';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 @ApiTags('Administrador')
-@Controller('manager')
-export class ManagerController {
+@Controller('administrador')
+export class AdministradorController {
   constructor(
-    private readonly managerService: ManagerService,
+    private readonly managerService: AdministadorService,
     private readonly mapper: ManagerMapper,
   ) {}
 

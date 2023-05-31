@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ReservaController } from './reserva.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import 'dotenv/config';
 import { Partitioners } from 'kafkajs';
 import { KafkaService } from './kafka.service';
 
@@ -12,7 +13,7 @@ import { KafkaService } from './kafka.service';
         transport: Transport.KAFKA,
         options: {
           client: {
-            brokers: ['host.docker.internal:9094'],
+            brokers: [process.env.KAKFA_URL],
           },
           producer: {
             createPartitioner: Partitioners.DefaultPartitioner,

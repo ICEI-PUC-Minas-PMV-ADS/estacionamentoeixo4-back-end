@@ -1,10 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import {
-  KafkaClient,
-  Consumer,
-  Producer,
-  ConsumerGroupOptions,
-} from 'kafka-node';
+import { KafkaClient, Consumer, Producer } from 'kafka-node';
+import 'dotenv/config';
 import { Message } from 'kafkajs';
 
 @Injectable()
@@ -15,7 +11,7 @@ export class KafkaService {
 
   constructor() {
     this.client = new KafkaClient({
-      kafkaHost: 'host.docker.internal:9094',
+      kafkaHost: process.env.KAKFA_URL,
     });
 
     this.producer = new Producer(this.client);
@@ -48,8 +44,6 @@ export class KafkaService {
     ];
 
     this.producer.send(payloads, (error, data) => {
-      console.log(data);
-
       if (error) {
         console.error('Kafka send message error:', error);
       } else {

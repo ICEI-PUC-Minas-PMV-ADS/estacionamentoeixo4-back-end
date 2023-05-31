@@ -2,13 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CACHE_MANAGER } from '@nestjs/common';
 import { PrismaService } from '@src/prisma/prisma.service';
 import { Administrador } from '@prisma/client';
-import { CreateManagerDto } from '@src/manager/dto/create-manager.dto';
-import { ManagerService } from '@src/manager/services/manager.service';
 import { AuthService } from '@src/auth/auth.service';
 import { AuthDTO } from '@src/auth/dto/me.input';
 import { ClienteService } from '@src/cliente/cliente.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { AdministadorService } from '@src/administrador/services/administrador.service';
 
 fdescribe('Testes unitários - Autenticação', () => {
   let service: AuthService
@@ -18,7 +17,7 @@ fdescribe('Testes unitários - Autenticação', () => {
       providers: [
         AuthService,
         ClienteService,
-        ManagerService,
+        AdministadorService,
         JwtService,
         { provide: CACHE_MANAGER, useValue: {} },
         PrismaService,

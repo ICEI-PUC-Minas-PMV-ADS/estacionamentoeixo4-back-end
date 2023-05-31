@@ -25,7 +25,7 @@ fdescribe('Testes unitários - Estacionamentos', () => {
 
   it('Deve criar um estacionamento', async () => {
     const createEstacionamentoMock: CreateEstacionamentoDto = {
-      preco: new Prisma.Decimal(55),
+      preco: 55,
       vagas_preferenciais: 10,
       vagas_gerais: 30,
       razao_social: "TESTE INC",
@@ -45,7 +45,7 @@ fdescribe('Testes unitários - Estacionamentos', () => {
 
     jest.spyOn(service, 'create').mockImplementation(() => Promise.resolve(createEstacionamentoResponse))
 
-    const response = await service.create(createEstacionamentoMock)
+    const response = await service.create(createEstacionamentoMock, createEstacionamentoResponse.id)
 
     expect(response?.createdAt).toBeTruthy()
     expect(response?.updatedAt).toBeTruthy()
@@ -77,7 +77,7 @@ fdescribe('Testes unitários - Estacionamentos', () => {
     const idAsParams = 1
 
     const updateEstacionamentoMock: CreateEstacionamentoDto = {
-      preco: new Prisma.Decimal(55),
+      preco: 55,
       vagas_preferenciais: 10,
       vagas_gerais: 30,
       razao_social: "TESTE INC",

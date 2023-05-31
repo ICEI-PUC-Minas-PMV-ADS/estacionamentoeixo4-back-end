@@ -7,19 +7,24 @@ import { ClienteService } from '@src/cliente/cliente.service';
 import { PrismaService } from '@src/prisma/prisma.service';
 import { AccessTokenStrategy } from './strategies/accessToken.strategy';
 import { RefreshTokenStrategy } from './strategies/refreshTonek.strategy';
-import { ManagerService } from '@src/manager/services/manager.service';
+import { AdministadorService } from '@src/administrador/services/administrador.service';
+import { RedisModule } from 'redis/redis.module';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Module({
-  imports: [ConfigModule.forRoot(), JwtModule.register({})],
+  imports: [ConfigModule.forRoot(), JwtModule.register({}), RedisModule,
+  ],
   providers: [
-    ManagerService,
+    AdministadorService,
     AuthService,
     AccessTokenStrategy,
     RefreshTokenStrategy,
     ClienteService,
     PrismaService,
+
   ],
   controllers: [AuthController],
+
   exports: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule { }

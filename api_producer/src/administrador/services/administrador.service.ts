@@ -7,10 +7,10 @@ import {
 import { PrismaService } from '@src/prisma/prisma.service';
 import { CreateManagerDto } from '../dto/create-manager.dto';
 import { UpdateManagerDto } from '../dto/update-manager.dto';
-import { Administrador } from '@prisma/client';
+import Administrador from '../entity/Administrador';
 
 @Injectable()
-export class ManagerService {
+export class AdministadorService {
   constructor(private readonly managerRepository: PrismaService) {}
 
   async create(CreateManagerDto: CreateManagerDto) {

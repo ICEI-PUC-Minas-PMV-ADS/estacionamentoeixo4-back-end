@@ -10,25 +10,23 @@ import {
 import { Prisma } from '@prisma/client';
 
 export class CreateEstacionamentoDto {
-  @IsDecimal()
   @IsNotEmpty()
   @ApiProperty({
-    type: 'decimal',
-    minimum: 6
+    type: 'number',
   })
-  preco: Prisma.Decimal;
+  preco: number;
 
   @IsInt()
   @IsNotEmpty()
   @ApiProperty({
-    type: 'number'
+    type: 'number',
   })
   vagas_preferenciais: number;
 
   @IsInt()
   @IsNotEmpty()
   @ApiProperty({
-    type: 'number'
+    type: 'number',
   })
   vagas_gerais: number;
 
@@ -37,14 +35,12 @@ export class CreateEstacionamentoDto {
   @ApiProperty({
     type: 'string',
   })
-  @MaxLength(255)
   razao_social: string;
 
   @IsString()
-  @MinLength(14)
   @IsNotEmpty()
   @ApiProperty({
-    type: 'string'
+    type: 'string',
   })
   @MaxLength(14)
   cnpj: string;
