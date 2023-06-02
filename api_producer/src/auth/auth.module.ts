@@ -8,7 +8,7 @@ import { PrismaService } from '@src/prisma/prisma.service';
 import { AccessTokenStrategy } from './strategies/accessToken.strategy';
 import { RefreshTokenStrategy } from './strategies/refreshTonek.strategy';
 import { AdministadorService } from '@src/administrador/services/administrador.service';
-import { RedisModule } from 'redis/redis.module';
+import { RedisModule } from '../../redis/redis.module';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Module({

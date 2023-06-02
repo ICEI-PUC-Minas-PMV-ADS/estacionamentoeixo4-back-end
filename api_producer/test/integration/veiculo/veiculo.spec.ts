@@ -16,11 +16,11 @@ import { EstacionamentoService } from "@src/estacionamento/estacionamento.servic
 import { CreateEstacionamentoDto } from "@src/estacionamento/dto/create-estacionamento.dto";
 import { Prisma } from "@prisma/client";
 import { Estacionamento } from "@prisma/client";
-import { ManagerService } from "@src/manager/services/manager.service";
-import { CreateManagerDto } from "@src/manager/dto/create-manager.dto";
 import { VeiculoService } from "@src/veiculo/veiculo.service";
 import { CreateVeiculoDto } from "@src/veiculo/dto/create-veiculo.dto";
 import { ClienteController } from "@src/cliente/cliente.controller";
+import { AdministadorService } from "@src/administrador/services/administrador.service";
+import { UpdateVeiculoDto } from "@src/veiculo/dto/update-veiculo.dto";
 
 const BASE_URL = (uri: string = "", route: string = "veiculo") => `http://localhost:${process.env.PORT}/api_producer/${route}/${uri}`
 
@@ -28,7 +28,7 @@ describe('ManagerControler', () => {
     let service: AuthService
     let controller: AuthController
     let app: INestApplication
-    let managerService: ManagerService
+    let managerService: AdministadorService
     let estacionamentoService: EstacionamentoService
     let veiculoService: VeiculoService
     let clienteService: ClienteService
@@ -38,7 +38,7 @@ describe('ManagerControler', () => {
             providers: [
                 VeiculoService,
                 EstacionamentoService,
-                ManagerService,
+                AdministadorService,
                 ClienteService,
                 ClienteController,
                 JwtService,
@@ -53,7 +53,7 @@ describe('ManagerControler', () => {
 
         service = module.get<AuthService>(AuthService);
         controller = module.get<AuthController>(AuthController);
-        managerService = module.get<ManagerService>(ManagerService)
+        managerService = module.get<AdministadorService>(AdministadorService)
         estacionamentoService = module.get<EstacionamentoService>(EstacionamentoService)
         veiculoService = module.get<VeiculoService>(VeiculoService)
         clienteService = module.get<ClienteService>(ClienteService)
@@ -73,6 +73,9 @@ describe('ManagerControler', () => {
         const email = `teste.${Math.random().toString().substring(5, 9)}@fulano.com`
         const uuid_firebase = `${cpf}teste`
 
+        const placa = `pkj${Math.random().toString().substring(5, 9)}`
+        const modelo = `modelo pkj${Math.random().toString().substring(5, 9)}`
+
         const createCliente: CreateClienteDto = {
             name: "Apenas Fulano",
             email,
@@ -83,22 +86,41 @@ describe('ManagerControler', () => {
         const createdCliente = await axios.post(`http://localhost:${process.env.PORT}/api_producer/cliente`
             , createCliente).then(res => res.data)
 
-        const createVeiculo: CreateVeiculoDto = {
-            placa: `pkj${Math.random().toString().substring(5, 9)}`,
-            modelo: `modelo pkj${Math.random().toString().substring(5, 9)}`,
+        const createVeiculoBody: CreateVeiculoDto = {
+            placa,
+            modelo,
+            id_cliente: +createdCliente?.id,
+            tipo: "Carro"
+        }
+
+        const createVeiculo = await axios.post(`http://localhost:${process.env.PORT}/api_producer/veiculo`, createVeiculoBody).then(res => res.data)
+        console.log('CREATE', createVeiculo)
+        expect(createVeiculo['id']).toBeTruthy()
+        expect(createVeiculo['placa']).toBeTruthy()
+        expect(createVeiculo['modelo']).toBeTruthy()
+        expect(createVeiculo['id_cliente']).toBeTruthy()
+        expect(createVeiculo['createdAt']).toBeTruthy()
+        expect(createVeiculo['updatedAt']).toBeTruthy()
+
+        const readVeiculo = await axios.get(`http://localhost:${process.env.PORT}/api_producer/veiculo/${createVeiculo["id"]}`).then(res => res.data)
+        console.log("READ", readVeiculo)
+        expect(readVeiculo['id']).toBeTruthy()
+
+        const updateVeiculoBody: UpdateVeiculoDto = {
+            placa,
+            tipo: "Moto",
+            modelo,
             id_cliente: +createdCliente?.id
         }
 
-        const response = await axios.post(`http://localhost:${process.env.PORT}/api_producer/veiculo`, createVeiculo).then(res => res.data).catch(e => console.error('AQUI :::::::::::::', util.inspect(e, false, null, true)))
+        const updateVeiculo = await axios.patch(`http://localhost:${process.env.PORT}/api_producer/veiculo/${createVeiculo["id"]}`, updateVeiculoBody).then(res => res.data)
+        console.log("UPDATE", updateVeiculo)
+        expect(createVeiculo["tipo"]).not.toBe(updateVeiculo["tipo"])
 
-        expect(response['id']).toBeTruthy()
-        expect(response['placa']).toBeTruthy()
-        expect(response['modelo']).toBeTruthy()
-        expect(response['id_cliente']).toBeTruthy()
-        expect(response['createdAt']).toBeTruthy()
-        expect(response['updatedAt']).toBeTruthy()
-
-        await axios.delete(`http://localhost:${process.env.PORT}/api_producer/veiculo/${response?.id}`)
+        const deleteVeiculo = await axios.delete(`http://localhost:${process.env.PORT}/api_producer/veiculo/${createVeiculo?.id}`).then(res => res.data)
+        console.log("DELETE", deleteVeiculo)
+        const tryToReadVeiculo = await axios.get(`http://localhost:${process.env.PORT}/api_producer/veiculo/${createVeiculo["id"]}`).then(res => res.data).catch(e => e)
+        expect(tryToReadVeiculo["id"]).toBeFalsy()
 
         await axios.delete(`http://localhost:${process.env.PORT}/api_producer/cliente/${createdCliente?.id}`)
     })

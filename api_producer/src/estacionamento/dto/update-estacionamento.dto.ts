@@ -13,7 +13,6 @@ import { ApiProperty } from '@nestjs/swagger';
 export class UpdateEstacionamentoDto extends PartialType(
   CreateEstacionamentoDto,
 ) {
-  @IsDecimal()
   @IsNotEmpty()
   @ApiProperty({
     type: 'number',

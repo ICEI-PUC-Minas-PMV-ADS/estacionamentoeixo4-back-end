@@ -106,6 +106,7 @@ fdescribe('Testes unitários - Estacionamentos', () => {
 
   it('Deve remover um estacionamento', async () => {
     const idAsParams = 1
+    const idAsParams2 = 2
 
     const updateEstacionamentoResponse: Estacionamento = {
       id: 1,
@@ -118,9 +119,9 @@ fdescribe('Testes unitários - Estacionamentos', () => {
       updatedAt: new Date()
     }
 
-    jest.spyOn(service, 'removeOne').mockImplementation(() => Promise.resolve(updateEstacionamentoResponse))
+    jest.spyOn(service, 'remove').mockImplementation(() => Promise.resolve(updateEstacionamentoResponse))
 
-    const response = await service.removeOne(idAsParams)
+    const response = await service.remove(idAsParams, idAsParams2)
 
     expect(response).toMatchObject(updateEstacionamentoResponse)
   })

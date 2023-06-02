@@ -1,4 +1,5 @@
-import { CACHE_MANAGER, INestApplication } from "@nestjs/common";
+import { INestApplication } from "@nestjs/common";
+import {CACHE_MANAGER} from "@nestjs/cache-manager";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { TestingModule, Test } from "@nestjs/testing";
@@ -13,21 +14,19 @@ import { AuthDTO } from "@src/auth/dto/me.input";
 import { CreateClienteDto } from "@src/cliente/dto/create-cliente.dto";
 import * as util from "util"
 import { EstacionamentoService } from "@src/estacionamento/estacionamento.service";
-import { CreateEstacionamentoDto } from "@src/estacionamento/dto/create-estacionamento.dto";
-import { Prisma } from "@prisma/client";
-import { Estacionamento } from "@prisma/client";
-import { ManagerService } from "@src/manager/services/manager.service";
-import { CreateManagerDto } from "@src/manager/dto/create-manager.dto";
+import {AdministadorService} from "@src/administrador/services/administrador.service";
+import {CreateManagerDto} from "@src/administrador/dto/create-manager.dto";
 import { VeiculoService } from "@src/veiculo/veiculo.service";
-import { UpdateManagerDto } from "@src/manager/dto/update-manager.dto";
+import { RedisModule } from '../../../redis/redis.module';
+import {UpdateManagerDto} from "@src/administrador/dto/update-manager.dto";
 
-const BASE_URL = (uri: string = "", route: string = "manager") => `http://localhost:${process.env.PORT}/api_producer/${route}/${uri}`
+const BASE_URL = (uri: string = "", route: string = "administrador") => `http://localhost:${process.env.PORT}/api_producer/${route}/${uri}`
 
 describe('ManagerControler', () => {
     let service: AuthService
     let controller: AuthController
     let app: INestApplication
-    let managerService: ManagerService
+    let managerService: AdministadorService
     let estacionamentoService: EstacionamentoService
 
     beforeAll(async () => {
@@ -35,21 +34,22 @@ describe('ManagerControler', () => {
             providers: [
                 EstacionamentoService,
                 VeiculoService,
-                ClienteService,
-                ManagerService,
+                AdministadorService,
                 JwtService,
                 { provide: CACHE_MANAGER, useValue: {} },
                 ConfigService,
                 AuthService,
                 AuthController,
                 PrismaService,
-                AppModule
+                ClienteService,
+                AppModule,
+                RedisModule
             ],
         }).compile();
 
         service = module.get<AuthService>(AuthService);
         controller = module.get<AuthController>(AuthController);
-        managerService = module.get<ManagerService>(ManagerService)
+        managerService = module.get<AdministadorService>(AdministadorService)
         estacionamentoService = module.get<EstacionamentoService>(EstacionamentoService)
 
         app = module.createNestApplication();
@@ -68,32 +68,33 @@ describe('ManagerControler', () => {
         const email = `teste.${Math.random().toString().substring(5, 10)}@fulano.com`
         const uuid_firebase = `${cnpj}teste`
 
-        const createEstacionamentoBody: CreateEstacionamentoDto = {
-            preco: new Prisma.Decimal(55),
-            vagas_gerais: 12,
-            vagas_preferenciais: 12,
-            razao_social: "Fulano INC Random95959595959",
-            cnpj
-        }
-
-        const createEstacionamento = await axios.post(`${BASE_URL("criar", "estacionamento")}`, createEstacionamentoBody).then(res => res.data).catch(e => console.error(e))
-
         const createBody: CreateManagerDto = {
             nome: "Apenas Fulano",
             email,
             uuid_firebase
         }
 
-        const create = await axios.post(`${BASE_URL()}`, createBody).then(res => res.data)
+        const createAdmin = await axios.post(`${BASE_URL()}`, createBody).then(res => res.data)
+        console.log("CREATE", createAdmin)
+        expect(createAdmin["id"]).toBeTruthy()
+        expect(createAdmin["createdAt"]).toBeTruthy()
+        expect(createAdmin["updatedAt"]).toBeTruthy()
+        expect(createAdmin["nome"]).toBeTruthy()
+        expect(createAdmin["email"]).toBeTruthy()
 
-        expect(create["id"]).toBeTruthy()
-        expect(create["createdAt"]).toBeTruthy()
-        expect(create["updatedAt"]).toBeTruthy()
-        expect(create["nome"]).toBeTruthy()
-        expect(create["email"]).toBeTruthy() 
+        const readAdmin = await axios.get(`${BASE_URL()}${createAdmin?.id}`).then(res => res.data)
+        console.log("READ", createAdmin)
+        expect(readAdmin["id"]).toBeTruthy()
 
-        await axios.delete(`${BASE_URL("deletar", "estacionamento")}/${createEstacionamento?.id}`)
-        await axios.delete(`${BASE_URL()}${create?.id}`)
+        const updateBody: UpdateManagerDto = { nome: "Fulano Atualizado", email }
+        const updateAdmin = await axios.patch(`${BASE_URL()}${createAdmin?.id}`, updateBody).then(res => res.data)
+        console.log("UPDATE", updateAdmin)
+        expect(createAdmin["nome"]).not.toBe(updateAdmin["nome"])
+
+        const deleteAdmin = await axios.delete(`${BASE_URL()}${createAdmin?.id}`).then(res => res.data)
+        console.log("DELETE", deleteAdmin)
+        const tryToReadDeletedAdmin = await axios.get(`${BASE_URL()}${createAdmin?.id}`).then(res => res.data).catch(e => e)
+        expect(tryToReadDeletedAdmin["id"]).toBeFalsy()
 
     })
 })
