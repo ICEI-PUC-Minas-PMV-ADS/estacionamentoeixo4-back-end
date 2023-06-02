@@ -6,7 +6,6 @@ export class UpdateManagerDto {
   @ApiProperty({
     description: 'Nome do administrador',
     type: 'string',
-    default: 'jhoh Doe',
   })
   @MinLength(1)
   nome: string;
@@ -15,7 +14,6 @@ export class UpdateManagerDto {
   @ApiProperty({
     description: 'Email do administrador',
     type: 'string',
-    default: 'jhohdoe@hotmail.com',
   })
   @MinLength(1)
   email: string;

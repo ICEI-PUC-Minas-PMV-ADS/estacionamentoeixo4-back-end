@@ -13,7 +13,7 @@ import { AuthDTO } from "@src/auth/dto/me.input";
 import { CreateClienteDto } from "@src/cliente/dto/create-cliente.dto";
 import { ClienteController } from "@src/cliente/cliente.controller";
 import * as util from "util"
-import { ManagerService } from "@src/manager/services/manager.service";
+import {AdministadorService} from "@src/administrador/services/administrador.service";
 
 const BASE_URL = (uri: string) => `http://localhost:${process.env.PORT}/api_producer/auth/${uri}`
 
@@ -29,7 +29,7 @@ describe('AuthControler', () => {
       providers: [
         ClienteController,
         ClienteService,
-        ManagerService,
+        AdministadorService,
         JwtService,
         { provide: CACHE_MANAGER, useValue: {} },
         ConfigService,

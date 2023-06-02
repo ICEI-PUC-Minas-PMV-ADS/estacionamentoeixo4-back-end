@@ -22,8 +22,4 @@ import { redisStore } from "cache-manager-redis-store";
 
 })
 
-export class RedisModule {
-    constructor(private configService: ConfigService) {
-        console.log(configService.get('REDIS_URI'))
-    }
-}
+export class RedisModule {}

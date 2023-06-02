@@ -120,9 +120,9 @@ export class AdministadorService {
         where: { email },
       });
 
-    if (emailExists) {
+    if (!emailExists) {
       throw new ConflictException(
-        `Administrador com o email '${email}' já está em uso.`,
+        `Administrador com o email: ${email} não existe.`,
       );
     }
 

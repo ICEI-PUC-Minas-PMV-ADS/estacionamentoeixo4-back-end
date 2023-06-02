@@ -5,20 +5,16 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
-  Req,
-  UseGuards,
+  Delete
 } from '@nestjs/common';
 import { EstacionamentoService } from './estacionamento.service';
 import { CreateEstacionamentoDto } from './dto/create-estacionamento.dto';
 import { UpdateEstacionamentoDto } from './dto/update-estacionamento.dto';
 import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { Request } from 'express';
-import { AccessTokenGuard } from '@src/common/guards/accessToken.guard';
 @ApiTags('Estacionamento')
 @Controller('estacionamento')
 export class EstacionamentoController {
-  constructor(private readonly estacionamentoService: EstacionamentoService) {}
+  constructor(private readonly estacionamentoService: EstacionamentoService) { }
   // @UseGuards(AccessTokenGuard)
   @Post('/:id')
   @ApiBody({
@@ -80,13 +76,8 @@ export class EstacionamentoController {
     );
   }
 
-  @Delete('/deletar/:id')
-  @ApiResponse({
-    status: 200,
-    description: 'Deleta estacionamento',
-  })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
-  async remove(@Param('id') id: string) {
-    return await this.estacionamentoService.removeOne(+id);
+  @Delete('/deletar/:id_est/:id_adm')
+  async remove(@Param('id_est') id_est: string, @Param('id_adm') id_adm: string) {
+    return await this.estacionamentoService.remove(+id_est, +id_adm);
   }
 }
