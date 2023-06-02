@@ -84,6 +84,8 @@ model Endereco {
   uf                String         @db.Char(2)
   estacionamento    Estacionamento @relation(fields: [id_estacionamento], references: [id])
   id_estacionamento Int
+  lat               Decimal
+  lgt               Decimal
 
   // Nome da tabela @@map
   @@map("endereco")
