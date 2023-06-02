@@ -14,7 +14,7 @@ namespace api_consumer.Api.Reserva.Repository
         {
             modelBuilder.Entity<ReservaEntity>(entity =>
             {
-                entity.HasKey(r => new { r.id_reserva });
+                entity.HasKey(r => new { r.id });
                 entity.Property(e => e.id_cliente).IsRequired();
                 entity.Property(e => e.id_estacionamento).IsRequired();
                 entity.Property(e => e.duracao).IsRequired();

@@ -1,20 +1,17 @@
-import { IsEmail, IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class AuthDTO {
-  @IsInt()
   @ApiProperty({
-    default: 1,
-    type: 'number',
+    type: 'string',
     description: 'Id do cliente',
   })
   @IsNotEmpty()
-  id: string;
+  uuid_firebase: string;
 
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    default: 'saxnovaesgomes@gmail.com',
     type: 'string',
     description: 'Email do cliente',
   })

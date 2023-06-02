@@ -7,7 +7,7 @@ namespace api_consumer.Api.Reserva.Entity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int id_reserva { get; set; }
+        public int id { get; set; }
 
         [Required]
         public int id_cliente { get; set; }

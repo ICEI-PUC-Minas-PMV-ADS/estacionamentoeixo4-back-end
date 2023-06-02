@@ -7,14 +7,12 @@ import {
   IsDecimal,
   IsNotEmpty,
 } from 'class-validator';
+import { Prisma } from '@prisma/client';
 
 export class CreateEstacionamentoDto {
-  @IsDecimal()
   @IsNotEmpty()
   @ApiProperty({
-    type: 'decimal',
-    minimum: 6,
-    default: 12340,
+    type: 'number',
   })
   preco: number;
 
@@ -22,7 +20,6 @@ export class CreateEstacionamentoDto {
   @IsNotEmpty()
   @ApiProperty({
     type: 'number',
-    default: 12,
   })
   vagas_preferenciais: number;
 
@@ -30,7 +27,6 @@ export class CreateEstacionamentoDto {
   @IsNotEmpty()
   @ApiProperty({
     type: 'number',
-    default: 24,
   })
   vagas_gerais: number;
 
@@ -38,17 +34,13 @@ export class CreateEstacionamentoDto {
   @IsNotEmpty()
   @ApiProperty({
     type: 'string',
-    default: 'JhoDoeSJW',
   })
-  @MaxLength(255)
   razao_social: string;
 
   @IsString()
-  @MinLength(14)
   @IsNotEmpty()
   @ApiProperty({
     type: 'string',
-    default: '12.232.423/0001-33',
   })
   @MaxLength(14)
   cnpj: string;

@@ -60,5 +60,6 @@ async function bootstrap() {
   //Listener server express
   const port = process.env.PORT || 3000;
   await app.listen(port);
+  console.log(port);
 }
 bootstrap();

@@ -13,12 +13,9 @@ import { ApiProperty } from '@nestjs/swagger';
 export class UpdateEstacionamentoDto extends PartialType(
   CreateEstacionamentoDto,
 ) {
-  @IsDecimal()
   @IsNotEmpty()
   @ApiProperty({
-    type: 'decimal',
-    minimum: 6,
-    default: 12340,
+    type: 'number',
   })
   preco: number;
 
@@ -26,7 +23,6 @@ export class UpdateEstacionamentoDto extends PartialType(
   @IsNotEmpty()
   @ApiProperty({
     type: 'number',
-    default: 12,
   })
   vagas_preferenciais: number;
 
@@ -42,7 +38,6 @@ export class UpdateEstacionamentoDto extends PartialType(
   @IsNotEmpty()
   @ApiProperty({
     type: 'string',
-    default: 'JhoDoeSJW',
   })
   @MaxLength(255)
   razao_social: string;
@@ -52,7 +47,6 @@ export class UpdateEstacionamentoDto extends PartialType(
   @IsNotEmpty()
   @ApiProperty({
     type: 'string',
-    default: '12.232.423/0001-33',
   })
   @MaxLength(14)
   cnpj: string;
