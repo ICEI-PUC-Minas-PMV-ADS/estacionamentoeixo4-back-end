@@ -8,15 +8,15 @@ datasource db {
 }
 
 model Cliente {
-  id        Int       @id @default(autoincrement())
-  name      String    @db.VarChar(50)
-  email     String    @unique @db.VarChar(50)
-  cpf       String    @db.Char(11)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
-  Veiculo   Veiculo[]
-  uuid_firebase   String                             @unique
-
+  id            Int         @id @default(autoincrement())
+  name          String      @db.VarChar(50)
+  email         String      @unique @db.VarChar(50)
+  cpf           String      @db.Char(11)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @default(now())
+  Veiculo       Veiculo[]
+  uuid_firebase String      @unique
+  Avaliacao     Avaliacao[]
 
   // Nome da tabela @@map
   @@map("cliente")
@@ -48,6 +48,7 @@ model Estacionamento {
   updatedAt       DateTime                           @default(now())
   administradores EstacionamentoAndAdministradores[]
   Endereco        Endereco[]
+  Avaliacao       Avaliacao[]
 
   @@map("estacionamento")
 }
@@ -92,14 +93,27 @@ model Endereco {
 }
 
 model Reserva {
-id                Int            @id @default(autoincrement())
-id_cliente  Int 
-id_estacionamento Int
-duracao Int
-horario_reserva DateTime
-id_veiculo Int
-canceledAt DateTime
+  id                Int      @id @default(autoincrement())
+  id_cliente        Int
+  id_estacionamento Int
+  duracao           Int
+  horario_reserva   DateTime
+  id_veiculo        Int
+  canceledAt        DateTime
 
-//Nome da tabela @@map
- @@map("reserva")
+  //Nome da tabela @@map
+  @@map("reserva")
+}
+
+model Avaliacao {
+  id                Int            @id @default(autoincrement())
+  cliente           Cliente        @relation(fields: [id_cliente], references: [id])
+  id_cliente        Int
+  estacionamento    Estacionamento @relation(fields: [id_estacionamento], references: [id])
+  id_estacionamento Int
+  avaliacao         Int
+  comentario        String         @db.Char(255)
+
+  //Nome da tabela @@map
+  @@map("avaliacao")
 }

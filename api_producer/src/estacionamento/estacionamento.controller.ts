@@ -11,6 +11,7 @@ import { EstacionamentoService } from './estacionamento.service';
 import { CreateEstacionamentoDto } from './dto/create-estacionamento.dto';
 import { UpdateEstacionamentoDto } from './dto/update-estacionamento.dto';
 import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { EstacionamentoMapper } from './mappers/estacionamento-mapper';
 @ApiTags('Estacionamento')
 @Controller('estacionamento')
 export class EstacionamentoController {
@@ -30,20 +31,24 @@ export class EstacionamentoController {
     @Body() createEstacionamentoDto: CreateEstacionamentoDto,
     @Param('id') id: string,
   ) {
+    let mapperEstacionamento = new EstacionamentoMapper()
+    const estacionamento = mapperEstacionamento.mapCreateEstacionamentoDtoToCreateModel(createEstacionamentoDto);
+    const endereco = mapperEstacionamento.mapCreateAddressDtoToCreateModel(createEstacionamentoDto);
     return await this.estacionamentoService.create(
-      createEstacionamentoDto,
+      estacionamento,
+      endereco,
       Number(id),
     );
   }
 
-  @Get('/encontrar/:id')
+  @Get('/')
   @ApiResponse({
     status: 200,
     description: 'Recupera um estacionamento',
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  async findOne(@Param('id') id: string) {
-    return await this.estacionamentoService.findOne(+id);
+  async findAll() {
+    return await this.estacionamentoService.findAll();
   }
 
   @Get('/:id')
@@ -68,11 +73,15 @@ export class EstacionamentoController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async update(
     @Param('id') id: string,
-    @Body() updateEstacionamentoDto: UpdateEstacionamentoDto,
+    @Body() estacionamentoDTO: CreateEstacionamentoDto,
   ) {
+    let mapperEstacionamento = new EstacionamentoMapper()
+    const estacionamento = mapperEstacionamento.mapCreateEstacionamentoDtoToCreateModel(estacionamentoDTO);
+    const endereco = mapperEstacionamento.mapCreateAddressDtoToCreateModel(estacionamentoDTO);
     return await this.estacionamentoService.updateOne(
       +id,
-      updateEstacionamentoDto,
+      estacionamento,
+      endereco,
     );
   }
 

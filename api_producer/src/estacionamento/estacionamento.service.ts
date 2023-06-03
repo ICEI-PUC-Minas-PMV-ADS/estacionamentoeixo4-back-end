@@ -1,12 +1,14 @@
 import {
   BadRequestException,
   Injectable,
+  NotAcceptableException,
   InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from '@src/prisma/prisma.service';
 import { CreateEstacionamentoDto } from './dto/create-estacionamento.dto';
 import { UpdateEstacionamentoDto } from './dto/update-estacionamento.dto';
 import Estacionamento from './entity/Estacionamento';
+import { Endereco } from './entity/Endereco';
 
 @Injectable()
 export class EstacionamentoService {
@@ -18,12 +20,15 @@ export class EstacionamentoService {
    * @returns Estacionamento Created
    */
   async create(
-    createEstacionamentoDto: CreateEstacionamentoDto,
+    estacionamento: Estacionamento,
+    endereco: Endereco,
     id: number,
-  ): Promise<Estacionamento> {
+  ): Promise<any> {
+
+    // Recupera se o estacionamento existe
     const alreadyExists: Estacionamento =
       await this.clientRepository.estacionamento.findFirst({
-        where: { cnpj: createEstacionamentoDto.cnpj },
+        where: { cnpj: estacionamento.cnpj },
         include: {
           administradores: true,
         },
@@ -31,16 +36,20 @@ export class EstacionamentoService {
 
     if (alreadyExists) {
       throw new BadRequestException(
-        `O estacionamento ${createEstacionamentoDto.razao_social} já está cadastrado com o CNPJ: ${createEstacionamentoDto.cnpj}. Por favor, tente recuperar a senha!`,
+        `O estacionamento ${estacionamento.razao_social} já está cadastrado com o CNPJ: ${estacionamento.cnpj}. Por favor, tente recuperar a senha!`,
       );
     }
 
+    // Insere o registro
     const createEstacionamento: Estacionamento =
       await this.clientRepository.estacionamento.create({
-        data: createEstacionamentoDto,
+        data: estacionamento,
+      }).catch(err => {
+        throw new InternalServerErrorException("Erro ao inserir dados" + err)
       });
 
-    //EstacionamentoAndAdministrador
+
+    //Insere registro na tabela Pivot EstacionamentoAndAdministrador
     await this.clientRepository.estacionamentoAndAdministradores
       .create({
         data: {
@@ -54,13 +63,26 @@ export class EstacionamentoService {
         );
       });
 
-    if (!createEstacionamento) {
-      throw new InternalServerErrorException(
-        `Não foi possível criar o estacionamento.`,
-      );
-    }
 
-    return createEstacionamento;
+    //Insere os dados do Endereço do estacionamento 
+    const enderecoCreated = await this.clientRepository.endereco.create({
+      data: {
+        cidade: endereco.cidade,
+        endereco: endereco.endereco,
+        numero: endereco.numero,
+        bairro: endereco.bairro,
+        cep: endereco.cep,
+        uf: endereco.uf,
+        lat: endereco.lat,
+        lgt: endereco.lat,
+        id_estacionamento: createEstacionamento.id,
+      },
+    }).catch(err => {
+      throw new InternalServerErrorException("Erro ao inserir endereço" + err)
+    })
+
+
+    return { ...createEstacionamento, ...enderecoCreated };
   }
 
   async findOne(id: number): Promise<Estacionamento> {
@@ -80,6 +102,25 @@ export class EstacionamentoService {
 
     return foundEstacionamento;
   }
+
+  async findAll(): Promise<Estacionamento[]> {
+    const foundEstacionamento: Estacionamento[] =
+      await this.clientRepository.estacionamento.findMany({
+        include: {
+          Endereco: true
+        }
+      });
+
+    if (!foundEstacionamento) {
+      throw new InternalServerErrorException(
+        `Não existe estacionamento cadastrado no banco`,
+      );
+    }
+
+    return foundEstacionamento;
+  }
+
+
 
   async findEstacionamentosAdm(id_adm: number): Promise<Estacionamento[]> {
     const foundEstacionamento: Estacionamento[] =
@@ -101,12 +142,15 @@ export class EstacionamentoService {
 
   async updateOne(
     id: number,
-    updateEstacionamentoDto: UpdateEstacionamentoDto,
+    estacionamento: Estacionamento,
+    endereco: Endereco,
   ): Promise<Estacionamento> {
+    // Atualiza o estacionamento
     const updatedEstacionamento: Estacionamento =
       await this.clientRepository.estacionamento.update({
         where: { id: id },
-        data: updateEstacionamentoDto,
+        data: estacionamento,
+
       });
 
     if (!updatedEstacionamento) {
@@ -115,7 +159,27 @@ export class EstacionamentoService {
       );
     }
 
-    return updatedEstacionamento;
+    // Atualiza o  endereço caso tenha atualização 
+    const updateAddress = this.clientRepository.endereco.update({
+      where: {
+        id: estacionamento.endereco.id
+      },
+      data: {
+        cidade: endereco.cidade,
+        endereco: endereco.endereco,
+        numero: endereco.numero,
+        bairro: endereco.bairro,
+        cep: endereco.cep,
+        uf: endereco.uf,
+        lat: endereco.lat,
+        lgt: endereco.lat,
+      }
+    })
+
+
+
+
+    return { ...updatedEstacionamento, ...updateAddress };
   }
 
   async remove(id_est: number, id_adm: number): Promise<Estacionamento> {
@@ -130,6 +194,17 @@ export class EstacionamentoService {
         `O estacionamento com id: ${id_est} não existe.`,
       );
     }
+
+    //Deleta na tabela de enderenço do estacionamento
+    await this.clientRepository.endereco.delete({
+      where: {
+        id: alreadyExists.endereco.id
+      }
+    }).catch(err => {
+      console.error(err)
+      throw new BadRequestException("Endereço e adminstiradores não encontardo!" + err)
+    })
+
     // Deleta o registro na tabela EstacionamentoAndAdministrador
     await this.clientRepository.estacionamentoAndAdministradores.delete({
       where: {
@@ -144,6 +219,7 @@ export class EstacionamentoService {
     })
 
 
+    //Deleta o estacionamento
     const deletedEstacionamento: Estacionamento =
       await this.clientRepository.estacionamento.delete({
         where: { id: id_est },

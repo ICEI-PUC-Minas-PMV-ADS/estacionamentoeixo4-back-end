@@ -16,17 +16,16 @@ import { EstacionamentoService } from "@src/estacionamento/estacionamento.servic
 import { CreateEstacionamentoDto } from "@src/estacionamento/dto/create-estacionamento.dto";
 import { Prisma } from "@prisma/client";
 import { Estacionamento } from "@prisma/client";
-import {AdministadorService} from "@src/administrador/services/administrador.service";
-import {CreateManagerDto} from "@src/administrador/dto/create-manager.dto";
-import {UpdateEstacionamentoDto} from "@src/estacionamento/dto/update-estacionamento.dto";
-
+import { AdministadorService } from "@src/administrador/services/administrador.service";
+import { CreateManagerDto } from "@src/administrador/dto/create-manager.dto";
+import { UpdateEstacionamentoDto } from "@src/estacionamento/dto/update-estacionamento.dto";
 const BASE_URL = () => `http://localhost:${process.env.PORT}/api_producer/estacionamento`
 
 describe('EstacionamentoControler', () => {
-    let service: AuthService
-    let controller: AuthController
-    let app: INestApplication
-    let estacionamentoService: EstacionamentoService
+  let service: AuthService
+  let controller: AuthController
+  let app: INestApplication
+  let estacionamentoService: EstacionamentoService
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -47,69 +46,88 @@ describe('EstacionamentoControler', () => {
     service = module.get<AuthService>(AuthService);
     controller = module.get<AuthController>(AuthController);
     estacionamentoService = module.get<EstacionamentoService>(EstacionamentoService)
-   
+
     app = module.createNestApplication();
 
     await app.init()
   });
 
-    afterAll(async () => {
-        await app.close()
+  afterAll(async () => {
+    await app.close()
+  })
+
+  it('Deve criar estacionamento', async () => {
+
+    const cnpj = `${Math.random().toString().substring(5, 8)}44433322000`
+    const email = `teste.${Math.random().toString().substring(5, 10)}@fulano.com`
+    const uuid_firebase = `${cnpj}teste`
+
+    const createAdminBody: CreateManagerDto = {
+      nome: "Apenas Fulano",
+      email,
+      uuid_firebase
+    }
+
+    const createAdmin = await axios.post(`http://localhost:${process.env.PORT}/api_producer/administrador`, createAdminBody).then(res => res.data)
+
+    const createBody: CreateEstacionamentoDto = {
+      preco: 55,
+      vagas_gerais: 12,
+      vagas_preferenciais: 12,
+      razao_social: "Fulano INC",
+      cnpj,
+      bairro: "Nova York",
+      cep: 12312442112345,
+      cidade: "California",
+      endereco: "São bernado",
+      lat: -12124124.1241245,
+      lgt: 12124124.1241245,
+      numero: 12,
+      uf: "YK"
+
+    }
+
+    const createEstacionamento = await axios.post(`${BASE_URL()}/${createAdmin["id"]}`, createBody).then(res => res.data).catch(err => {
+      console.error(util.inspect(err, false, null, true))
     })
+    console.log("CREATE", createEstacionamento)
+    expect(createEstacionamento["id"]).toBeTruthy()
+    expect(createEstacionamento["preco"]).toBeTruthy()
+    expect(createEstacionamento["vagas_preferenciais"]).toBeTruthy()
+    expect(createEstacionamento["vagas_gerais"]).toBeTruthy()
+    expect(createEstacionamento["razao_social"]).toBeTruthy()
+    expect(createEstacionamento["cnpj"]).toBeTruthy()
+    expect(createEstacionamento["createdAt"]).toBeTruthy()
+    expect(createEstacionamento["updatedAt"]).toBeTruthy()
 
-    it('Deve criar estacionamento', async () => {
+    const readEstacionamento = await axios.get(`${BASE_URL()}/encontrar/${createEstacionamento["id"]}`).then(res => res.data)
+    console.log("READ", readEstacionamento)
+    expect(readEstacionamento["id"]).toBeTruthy()
 
-      const cnpj = `${Math.random().toString().substring(5, 8)}44433322111`
-      const email = `teste.${Math.random().toString().substring(5, 10)}@fulano.com`
-      const uuid_firebase = `${cnpj}teste`
+    const updateBody: UpdateEstacionamentoDto = {
+      preco: createBody.preco,
+      vagas_gerais: createBody.vagas_gerais,
+      vagas_preferenciais: createBody.vagas_preferenciais,
+      razao_social: "Fulano Atualizazo INC",
+      cnpj,
+      bairro: "Nova York",
+      cep: 123124421,
+      cidade: "California",
+      endereco: "São bernado",
+      lat: -12124124.1241245,
+      lgt: 12124124.1241245,
+      numero: 12,
+      uf: "YK"
+    }
+    const updateEstacionamento = await axios.patch(`${BASE_URL()}/atualizar/${createEstacionamento["id"]}`, updateBody).then(res => res.data).catch(e => console.error(util.inspect(e, false, null, true)))
+    console.log("UPDATE", updateEstacionamento)
+    expect(updateEstacionamento["razao_social"]).not.toBe(createEstacionamento["razao_social"])
 
-      const createAdminBody: CreateManagerDto = {
-        nome: "Apenas Fulano",
-        email,
-        uuid_firebase
-      }
+    const deleteEstacionamento = await axios.delete(`http://localhost:${process.env.PORT}/api_producer/estacionamento/deletar/${createEstacionamento['id']}/${createAdmin["id"]}`).then(res => res.data)
+    console.log('DELETE', deleteEstacionamento)
+    const tryToReadEstacionamento = await axios.get(`${BASE_URL()}/encontrar/${createEstacionamento["id"]}`).then(res => res.data).catch(e => e)
+    expect(tryToReadEstacionamento["id"]).toBeFalsy()
 
-      const createAdmin = await axios.post(`http://localhost:${process.env.PORT}/api_producer/administrador`, createAdminBody).then(res => res.data)
-
-      const createBody: CreateEstacionamentoDto = {
-        preco: 55,
-        vagas_gerais: 12,
-        vagas_preferenciais: 12,
-        razao_social: "Fulano INC",
-        cnpj
-      }
-
-      const createEstacionamento = await axios.post(`${BASE_URL()}/${createAdmin["id"]}`, createBody).then(res => res.data)
-      console.log("CREATE", createEstacionamento)
-      expect(createEstacionamento["id"]).toBeTruthy()
-      expect(createEstacionamento["preco"]).toBeTruthy()
-      expect(createEstacionamento["vagas_preferenciais"]).toBeTruthy()
-      expect(createEstacionamento["vagas_gerais"]).toBeTruthy()
-      expect(createEstacionamento["razao_social"]).toBeTruthy()
-      expect(createEstacionamento["cnpj"]).toBeTruthy()
-      expect(createEstacionamento["createdAt"]).toBeTruthy()
-      expect(createEstacionamento["updatedAt"]).toBeTruthy()
-
-      const readEstacionamento = await axios.get(`${BASE_URL()}/encontrar/${createEstacionamento["id"]}`).then(res => res.data)
-      console.log("READ", readEstacionamento)
-      expect(readEstacionamento["id"]).toBeTruthy()
-
-      const updateBody: UpdateEstacionamentoDto = {
-        preco: createBody.preco,
-        vagas_gerais: createBody.vagas_gerais ,
-        vagas_preferenciais: createBody.vagas_preferenciais,
-        cnpj,
-        razao_social: "Fulano Atualizazo INC"
-      }
-      const updateEstacionamento = await axios.patch(`${BASE_URL()}/atualizar/${createEstacionamento["id"]}`, updateBody).then(res => res.data).catch(e => console.error(util.inspect(e, false, null, true)))
-      console.log("UPDATE", updateEstacionamento)
-      expect(updateEstacionamento["razao_social"]).not.toBe(createEstacionamento["razao_social"])
-
-      const deleteEstacionamento = await axios.delete(`http://localhost:${process.env.PORT}/api_producer/estacionamento/deletar/${createEstacionamento['id']}/${createAdmin["id"]}`).then(res => res.data)
-      console.log('DELETE', deleteEstacionamento)
-      const tryToReadEstacionamento = await axios.get(`${BASE_URL()}/encontrar/${createEstacionamento["id"]}`).then(res => res.data).catch(e => e)
-      expect(tryToReadEstacionamento["id"]).toBeFalsy()
-    
-      await axios.delete(`http://localhost:${process.env.PORT}/api_producer/administrador/${createAdmin?.id}`).then(res => res.data).catch(e => console.error(e))
-    })
+    await axios.delete(`http://localhost:${process.env.PORT}/api_producer/administrador/${createAdmin?.id}`).then(res => res.data).catch(e => console.error(e))
+  })
 })
