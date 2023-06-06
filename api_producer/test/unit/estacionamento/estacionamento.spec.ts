@@ -5,7 +5,9 @@ import { CreateClienteDto } from '@src/cliente/dto/create-cliente.dto';
 import { EstacionamentoService } from '@src/estacionamento/estacionamento.service';
 import { EstacionamentoController } from '@src/estacionamento/estacionamento.controller';
 import { CreateEstacionamentoDto } from '@src/estacionamento/dto/create-estacionamento.dto';
-import { Estacionamento, Prisma } from '@prisma/client';
+import { Endereco } from '@src/estacionamento/entity/Endereco';
+import Estacionamento from '@src/estacionamento/entity/Estacionamento';
+// import { Endereco, Estacionamento, Prisma } from '@prisma/client';
 
 fdescribe('Testes unitários - Estacionamentos', () => {
   let service: EstacionamentoService
@@ -24,17 +26,31 @@ fdescribe('Testes unitários - Estacionamentos', () => {
   });
 
   it('Deve criar um estacionamento', async () => {
-    const createEstacionamentoMock: CreateEstacionamentoDto = {
+    const endereco: Endereco[] = [{
+      bairro: 'bairro',
+      cep: 5425787,
+      cidade: 'cidade',
+      endereco: 'endereco',
+      id: 1,
+      id_estacionamento: 1,
+      lat: 5656565656655,
+      lgt: 8484844484844,
+      numero: 1234,
+      uf: "sp"
+    }]
+
+    const createEstacionamentoMock: Estacionamento = {
       preco: 55,
-      vagas_preferenciais: 10,
-      vagas_gerais: 30,
-      razao_social: "TESTE INC",
-      cnpj: "12145856985457"
+      vagas_preferenciais: 55,
+      vagas_gerais: 55,
+      razao_social: "razao_teste",
+      cnpj: "12345678945612",
+      endereco,
     }
 
     const createEstacionamentoResponse: Estacionamento = {
       id: 1,
-      preco: new Prisma.Decimal(55),
+      preco: 55,
       vagas_preferenciais: 10,
       vagas_gerais: 30,
       razao_social: "TESTE INC",
@@ -45,7 +61,7 @@ fdescribe('Testes unitários - Estacionamentos', () => {
 
     jest.spyOn(service, 'create').mockImplementation(() => Promise.resolve(createEstacionamentoResponse))
 
-    const response = await service.create(createEstacionamentoMock, createEstacionamentoResponse.id)
+    const response = await service.create(createEstacionamentoMock, endereco[0], createEstacionamentoResponse.id)
 
     expect(response?.createdAt).toBeTruthy()
     expect(response?.updatedAt).toBeTruthy()
@@ -57,7 +73,7 @@ fdescribe('Testes unitários - Estacionamentos', () => {
 
     const createdEstacionamentoResponse: Estacionamento = {
       id: 1,
-      preco: new Prisma.Decimal(55),
+      preco: 55,
       vagas_preferenciais: 10,
       vagas_gerais: 30,
       razao_social: "TESTE INC",
@@ -76,7 +92,20 @@ fdescribe('Testes unitários - Estacionamentos', () => {
   it('Deve atualizar um estacionamento', async () => {
     const idAsParams = 1
 
-    const updateEstacionamentoMock: CreateEstacionamentoDto = {
+    const endereco: Endereco[] = [{
+      bairro: 'bairro',
+      cep: 5425787,
+      cidade: 'cidade',
+      endereco: 'endereco',
+      id: 1,
+      id_estacionamento: 1,
+      lat: 5656565656655,
+      lgt: 8484844484844,
+      numero: 1234,
+      uf: "sp"
+    }]
+
+    const updateEstacionamentoMock: Estacionamento = {
       preco: 55,
       vagas_preferenciais: 10,
       vagas_gerais: 30,
@@ -86,7 +115,7 @@ fdescribe('Testes unitários - Estacionamentos', () => {
 
     const updateEstacionamentoResponse: Estacionamento = {
       id: 1,
-      preco: new Prisma.Decimal(55),
+      preco: 55,
       vagas_preferenciais: 10,
       vagas_gerais: 30,
       razao_social: "TESTE INC",
@@ -97,7 +126,7 @@ fdescribe('Testes unitários - Estacionamentos', () => {
 
     jest.spyOn(service, 'updateOne').mockImplementation(() => Promise.resolve(updateEstacionamentoResponse))
 
-    const response = await service.updateOne(idAsParams, updateEstacionamentoMock)
+    const response = await service.updateOne(idAsParams, updateEstacionamentoMock, endereco[0])
 
     expect(response?.createdAt).toBeTruthy()
     expect(response?.updatedAt).toBeTruthy()
@@ -110,7 +139,7 @@ fdescribe('Testes unitários - Estacionamentos', () => {
 
     const updateEstacionamentoResponse: Estacionamento = {
       id: 1,
-      preco: new Prisma.Decimal(55),
+      preco: 55,
       vagas_preferenciais: 10,
       vagas_gerais: 30,
       razao_social: "TESTE INC",

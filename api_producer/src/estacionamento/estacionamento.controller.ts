@@ -58,19 +58,29 @@ export class EstacionamentoController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async find(@Param('id') id: string) {
+    return await this.estacionamentoService.findOne(+id);
+  }
+
+  @Get('/adm/:id')
+  @ApiResponse({
+    status: 200,
+    description: 'Recupera estacionamentos do adm',
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  async findAdmEstacionamentos(@Param('id') id: string) {
     return await this.estacionamentoService.findEstacionamentosAdm(+id);
   }
 
   @Patch('/atualizar/:id')
-  @ApiBody({
-    description: 'Atualiza estacionamento ',
-    type: UpdateEstacionamentoDto,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Atualiza estacionamento',
-  })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  // @ApiBody({
+  //   description: 'Atualiza estacionamento ',
+  //   type: UpdateEstacionamentoDto,
+  // })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'Atualiza estacionamento',
+  // })
+  //@ApiResponse({ status: 403, description: 'Forbidden.' })
   async update(
     @Param('id') id: string,
     @Body() estacionamentoDTO: CreateEstacionamentoDto,
