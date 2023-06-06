@@ -12,5 +12,5 @@ export default class Estacionamento {
   createdAt?: Date;
   updatedAt?: Date;
   EstacionamentoAndAdministradores?: EstacionamentoAndAdministradores[]
-  endereco?: Endereco
+  endereco?: Endereco[]
 }
