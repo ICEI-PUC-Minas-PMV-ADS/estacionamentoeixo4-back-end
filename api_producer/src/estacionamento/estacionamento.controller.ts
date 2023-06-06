@@ -72,15 +72,15 @@ export class EstacionamentoController {
   }
 
   @Patch('/atualizar/:id')
-  // @ApiBody({
-  //   description: 'Atualiza estacionamento ',
-  //   type: UpdateEstacionamentoDto,
-  // })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'Atualiza estacionamento',
-  // })
-  //@ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiBody({
+    description: 'Atualiza estacionamento ',
+    type: UpdateEstacionamentoDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Atualiza estacionamento',
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
   async update(
     @Param('id') id: string,
     @Body() estacionamentoDTO: CreateEstacionamentoDto,
