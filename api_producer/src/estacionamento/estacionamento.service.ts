@@ -85,6 +85,11 @@ export class EstacionamentoService {
     return { ...createEstacionamento, ...enderecoCreated };
   }
 
+  /**
+   * @function  findOne
+   * @param id 
+   * @returns 
+   */
   async findOne(id: number): Promise<Estacionamento> {
     const foundEstacionamento: Estacionamento =
       await this.clientRepository.estacionamento.findUnique({
@@ -103,25 +108,34 @@ export class EstacionamentoService {
     return foundEstacionamento;
   }
 
-  async findAll(): Promise<Estacionamento[]> {
+  /**
+   * @function findAll
+   * @returns 
+   */
+
+  async findAll(): Promise<{ estacionamentos: Estacionamento[] }> {
     const foundEstacionamento: Estacionamento[] =
       await this.clientRepository.estacionamento.findMany({
         include: {
           Endereco: true
         }
       });
-
     if (!foundEstacionamento) {
       throw new InternalServerErrorException(
         `Não existe estacionamento cadastrado no banco`,
       );
     }
-
-    return foundEstacionamento;
+    return {
+      estacionamentos: foundEstacionamento
+    };
   }
 
 
-
+  /**
+   * function findEstacionamentosAdm
+   * @param id_adm 
+   * @returns 
+   */
   async findEstacionamentosAdm(id_adm: number): Promise<Estacionamento[]> {
     const foundEstacionamento: Estacionamento[] =
       await this.clientRepository.estacionamento.findMany({
@@ -140,6 +154,13 @@ export class EstacionamentoService {
     return foundEstacionamento;
   }
 
+  /**
+   *  @function updateOne
+   * @param id 
+   * @param estacionamento 
+   * @param endereco 
+   * @returns 
+   */
   async updateOne(
     id: number,
     estacionamento: Estacionamento,
@@ -175,13 +196,15 @@ export class EstacionamentoService {
         lgt: endereco.lat,
       }
     })
-
-
-
-
     return { ...updatedEstacionamento, ...updateAddress };
   }
 
+  /**
+   * @function remove
+   * @param id_est 
+   * @param id_adm 
+   * @returns 
+   */
   async remove(id_est: number, id_adm: number): Promise<Estacionamento> {
 
     const alreadyExists: Estacionamento =
