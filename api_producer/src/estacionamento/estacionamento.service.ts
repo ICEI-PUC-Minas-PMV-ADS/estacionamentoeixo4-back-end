@@ -166,12 +166,16 @@ export class EstacionamentoService {
     estacionamento: Estacionamento,
     endereco: Endereco,
   ): Promise<Estacionamento> {
+    const { cnpj: __cpj, ...data } = estacionamento
+
     // Atualiza o estacionamento
     const updatedEstacionamento: Estacionamento =
       await this.clientRepository.estacionamento.update({
         where: { id: id },
-        data: estacionamento,
-
+        data,
+        include: {
+          Endereco: true
+        }
       });
 
     if (!updatedEstacionamento) {
@@ -183,7 +187,7 @@ export class EstacionamentoService {
     // Atualiza o  endereço caso tenha atualização 
     const updateAddress = this.clientRepository.endereco.update({
       where: {
-        id: estacionamento.endereco.id
+        id: updatedEstacionamento["Endereco"][0].id
       },
       data: {
         cidade: endereco.cidade,
@@ -210,6 +214,9 @@ export class EstacionamentoService {
     const alreadyExists: Estacionamento =
       await this.clientRepository.estacionamento.findFirst({
         where: { id: id_est },
+        include: {
+          Endereco: true
+        }
       });
 
     if (!alreadyExists) {
@@ -218,18 +225,8 @@ export class EstacionamentoService {
       );
     }
 
-    //Deleta na tabela de enderenço do estacionamento
-    await this.clientRepository.endereco.delete({
-      where: {
-        id: alreadyExists.endereco.id
-      }
-    }).catch(err => {
-      console.error(err)
-      throw new BadRequestException("Endereço e adminstiradores não encontardo!" + err)
-    })
-
-    // Deleta o registro na tabela EstacionamentoAndAdministrador
-    await this.clientRepository.estacionamentoAndAdministradores.delete({
+     // Deleta o registro na tabela EstacionamentoAndAdministrador
+     await this.clientRepository.estacionamentoAndAdministradores.delete({
       where: {
         id_estacionamento_id_administrador: {
           id_estacionamento: id_est,
@@ -241,6 +238,15 @@ export class EstacionamentoService {
       throw new BadRequestException("Estacioanmento e adminstiradores não encontardo!")
     })
 
+    //Deleta na tabela de enderenço do estacionamento
+    await this.clientRepository.endereco.delete({
+      where: {
+        id: alreadyExists["Endereco"][0].id
+      }
+    }).catch(err => {
+      console.error(err)
+      throw new BadRequestException("Endereço e adminstiradores não encontardo!" + err)
+    })
 
     //Deleta o estacionamento
     const deletedEstacionamento: Estacionamento =

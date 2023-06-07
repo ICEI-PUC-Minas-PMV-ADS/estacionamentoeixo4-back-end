@@ -12,7 +12,7 @@ export class EstacionamentoMapper {
         createMapperEstacionamento.vagas_preferenciais = dto.vagas_preferenciais
         createMapperEstacionamento.vagas_gerais = dto.vagas_gerais
         createMapperEstacionamento.razao_social = dto.razao_social
-        createMapperEstacionamento.cnpj = dto.razao_social
+        createMapperEstacionamento.cnpj = dto.cnpj
         return createMapperEstacionamento;
     }
 
@@ -25,6 +25,8 @@ export class EstacionamentoMapper {
         createMapperEndereco.cep = dto.cep
         createMapperEndereco.cidade = dto.cidade
         createMapperEndereco.endereco = dto.endereco
+        createMapperEndereco.numero = dto.numero
+        createMapperEndereco.uf = dto.uf
         createMapperEndereco.lat = dto.lat
         createMapperEndereco.lgt = dto.lgt
         return createMapperEndereco;
@@ -39,7 +41,7 @@ export class EstacionamentoMapper {
         createMapperEstacionamento.vagas_preferenciais = dto.vagas_preferenciais
         createMapperEstacionamento.vagas_gerais = dto.vagas_gerais
         createMapperEstacionamento.razao_social = dto.razao_social
-        createMapperEstacionamento.cnpj = dto.razao_social
+        createMapperEstacionamento.cnpj = dto.cnpj
         return createMapperEstacionamento;
     }
 
