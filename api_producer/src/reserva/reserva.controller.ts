@@ -10,7 +10,7 @@ import { ClientKafka } from '@nestjs/microservices';
 @Controller('reserva')
 export class ReservaController implements OnModuleInit {
   kafkaProducer: Producer;
-  constructor(@Inject('KAFKA_PRODUCER_RESERVA') private clientKafka: ClientKafka) { }
+  constructor(@Inject('KAFKA_RESERVAR') private clientKafka: ClientKafka) { }
   async onModuleInit() {
     this.clientKafka.subscribeToResponseOf('reservar_vaga');
     this.clientKafka.subscribeToResponseOf('cancelar_vaga');

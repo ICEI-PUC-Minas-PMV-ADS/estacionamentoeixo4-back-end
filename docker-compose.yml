@@ -110,32 +110,25 @@ services:
       - 3000:3000
     expose:
       - 3000
-  # APi Consumer
+  # Api Consumer
   api_consumer:
-    image: apiconsumer:dev
-    container_name: 'api_consumer'
+    image: apiconsumer:latest
+    container_name: api_consumer
+    restart: unless-stopped
     depends_on:
-      - pg
       - kafka
+      - pg
+    links:
+      - kafka
+      - pg
     networks:
       - backend-networks
-    volumes:
-      - consumer-data:/usr/app
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - DOTNET_USE_POLLING_FILE_WATCHER=1
-      - NUGET_PACKAGES=/root/.nuget/fallbackpackages2
-      - NUGET_FALLBACK_PACKAGES=/root/.nuget/fallbackpackages;/root/.nuget/fallbackpackages2
-      - Logging__LogLevel__Default=Information
-      - Logging__LogLevel__Microsoft.AspNetCore=Warning
-      - ConnectionStrings__DefaultConnection=Server=pg;Port=5432;Database=db_why_park;User Id=whypark;Password=whypark123
+      - DATABASE_URL=postgresql://whypark:whypark123@pg:5432/db_why_park?schema=public
+      - KAFKA_URL=kafka:9094
     ports:
-     - 32770:443
-     - 32771:80
-    expose:
-       - 32770:443
-       - 32771:80
+      - 3030
+
   # Frontend
   frontend:
     image: frontend
@@ -156,8 +149,6 @@ services:
       - frontend-data:/var/lib/frontend
 
 volumes:
-  consumer-data:
-    driver: local
   frontend-data:
     driver: local
   postgres-db-data:

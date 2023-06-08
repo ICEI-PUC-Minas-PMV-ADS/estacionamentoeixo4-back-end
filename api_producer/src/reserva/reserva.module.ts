@@ -8,11 +8,11 @@ import { Partitioners } from 'kafkajs';
   imports: [
     ClientsModule.register([
       {
-        name: 'KAFKA_PRODUCER_RESERVA',
+        name: 'KAFKA_RESERVAR',
         transport: Transport.KAFKA,
         options: {
           client: {
-            brokers: [process.env.KAKFA_URL],
+            brokers: [process.env.KAFKA_URL],
           },
       
           consumer: {
