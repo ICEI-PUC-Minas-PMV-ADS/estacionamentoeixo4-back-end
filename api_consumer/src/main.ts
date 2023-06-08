@@ -6,6 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.connectMicroservice({
+    name: 'KAFKA_RESERVAR',
     transport: Transport.KAFKA,
     options: {
       client: {
