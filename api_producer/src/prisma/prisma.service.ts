@@ -9,8 +9,7 @@ import 'dotenv/config';
 @Injectable()
 export class PrismaService
   extends PrismaClient
-  implements OnModuleInit, OnModuleDestroy
-{
+  implements OnModuleInit, OnModuleDestroy {
   constructor() {
     super({
       datasources: {
@@ -33,7 +32,6 @@ export class PrismaService
       await app.close();
     });
   }
-
   get veiculo() {
     return this.veiculo;
   }

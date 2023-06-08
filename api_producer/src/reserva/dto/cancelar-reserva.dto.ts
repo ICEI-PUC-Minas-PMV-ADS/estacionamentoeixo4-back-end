@@ -20,11 +20,13 @@ export class CanceledReservaDto {
   @IsNotEmpty()
   id_estacionamento: number;
 
-  @IsDateString()
+  @IsNumber()
   @ApiProperty({
-    description: 'Cancelar  reserva',
-    type: 'string',
+    description: 'Id Veículo',
+    minimum: 1,
+    default: 1,
   })
   @IsNotEmpty()
-  canceledAt: string;
+  id_veiculo: number;
+
 }
