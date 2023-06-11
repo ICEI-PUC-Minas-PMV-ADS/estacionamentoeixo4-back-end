@@ -110,6 +110,26 @@ services:
       - 3000:3000
     expose:
       - 3000
+
+  # Frontend
+  frontend:
+    image: frontend
+    container_name: frontend
+    depends_on:
+      - api_producer
+    networks:
+      - backend-networks
+    environment:
+      DEV: production
+      VITE_PORT_SERVER: 3000
+      VITE_SERVER: localhost
+    ports:
+      - 8000:8000
+    expose:
+      - 8000
+    volumes:
+      - frontend-data:/var/lib/frontend
+
   # Api Consumer
   api_consumer:
     image: apiconsumer:latest
@@ -128,25 +148,6 @@ services:
       - KAFKA_URL=kafka:9094
     ports:
       - 3030
-
-  # Frontend
-  frontend:
-    image: frontend
-    container_name: frontend
-    depends_on:
-      - api_producer
-    networks:
-      - backend-networks
-    environment:
-      - DEV=production
-      - VITE_PORT=3000
-      - VITE_SERVER=api_producer
-    ports:
-      - 5173:5173
-    expose:
-      - 5173
-    volumes:
-      - frontend-data:/var/lib/frontend
 
 volumes:
   frontend-data:
