@@ -12,12 +12,12 @@ export class AvaliacaoController {
     return this.avaliacaoService.create(createAvaliacaoDto);
   }
 
-  @Get(':id')
+  @Get(':id_estacionamento')
   findAllFeedsEstacionamento(@Param('id') id: string) {
     return this.avaliacaoService.findAll(+id);
   }
 
-  
+
   @Get(':id')
   findFeedEstacionamento(@Param('id') id: string) {
     return this.avaliacaoService.findOne(+id);

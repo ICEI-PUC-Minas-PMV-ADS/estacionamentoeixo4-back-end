@@ -117,7 +117,8 @@ export class EstacionamentoService {
     const foundEstacionamento: Estacionamento[] =
       await this.clientRepository.estacionamento.findMany({
         include: {
-          Endereco: true
+          Endereco: true,
+          Avaliacao: true
         }
       });
     if (!foundEstacionamento) {
@@ -225,8 +226,8 @@ export class EstacionamentoService {
       );
     }
 
-     // Deleta o registro na tabela EstacionamentoAndAdministrador
-     await this.clientRepository.estacionamentoAndAdministradores.delete({
+    // Deleta o registro na tabela EstacionamentoAndAdministrador
+    await this.clientRepository.estacionamentoAndAdministradores.delete({
       where: {
         id_estacionamento_id_administrador: {
           id_estacionamento: id_est,

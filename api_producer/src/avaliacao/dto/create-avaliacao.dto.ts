@@ -12,14 +12,14 @@ export class CreateAvaliacaoDto {
 
     @IsNotEmpty()
     @ApiProperty({
-        title: "idEstacionamento"
+        title: "IdEstacionamento"
     })
     @IsNumber()
     id_estacionamento: number
 
     @IsNotEmpty()
     @ApiProperty({
-        title: "IdCliente"
+        title: "Avaliacao"
     })
     @IsNumber()
     avaliacao: number
