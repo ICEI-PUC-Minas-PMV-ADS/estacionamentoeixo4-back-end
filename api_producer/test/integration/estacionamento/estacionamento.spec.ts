@@ -50,7 +50,7 @@ describe('EstacionamentoControler', () => {
 
     app = module.createNestApplication();
 
-    await app.init();
+    await app.listen(3000);
   });
 
   afterAll(async () => {
