@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Reserva {
+  id                Int      @id @default(autoincrement())
+  id_cliente        Int
+  id_estacionamento Int
+  duracao           Int
+  horario_reserva   DateTime
+  id_veiculo        Int
+  canceledAt        DateTime?
+
+  @@map("reserva")
+}
+
+model EstacionamentoAndAdministradores {
+  id_estacionamento Int
+  id_administrador  Int
+  administrador     administrador  @relation(fields: [id_administrador], references: [id])
+  estacionamento    estacionamento @relation(fields: [id_estacionamento], references: [id])
+
+  @@id([id_estacionamento, id_administrador])
+}
+
+model administrador {
+  id                               Int                                @id @default(autoincrement())
+  createdAt                        DateTime                           @default(now())
+  updatedAt                        DateTime                           @default(now())
+  nome                             String
+  email                            String                             @unique
+  uuid_firebase                    String                             @unique
+  EstacionamentoAndAdministradores EstacionamentoAndAdministradores[]
+}
+
+model avaliacao {
+  id                Int            @id @default(autoincrement())
+  id_cliente        Int
+  id_estacionamento Int
+  avaliacao         Int
+  comentario        String         @db.Char(255)
+  cliente           cliente        @relation(fields: [id_cliente], references: [id])
+  estacionamento    estacionamento @relation(fields: [id_estacionamento], references: [id])
+}
+
+model cliente {
+  id            Int         @id @default(autoincrement())
+  name          String      @db.VarChar(50)
+  email         String      @unique @db.VarChar(50)
+  cpf           String      @db.Char(11)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @default(now())
+  uuid_firebase String      @unique
+  avaliacao     avaliacao[]
+  veiculo       veiculo[]
+}
+
+model endereco {
+  id                Int            @id @default(autoincrement())
+  cep               Int
+  bairro            String         @db.VarChar(255)
+  endereco          String         @db.VarChar(255)
+  numero            Int
+  cidade            String         @db.VarChar(50)
+  uf                String         @db.Char(2)
+  id_estacionamento Int
+  lat               Decimal
+  lgt               Decimal
+  estacionamento    estacionamento @relation(fields: [id_estacionamento], references: [id])
+}
+
+model estacionamento {
+  id                               Int                                @id @default(autoincrement())
+  preco                            Decimal                            @db.Decimal(9, 2)
+  vagas_preferenciais              Int
+  vagas_gerais                     Int
+  razao_social                     String                             @db.VarChar(255)
+  cnpj                             String                             @unique @db.Char(14)
+  createdAt                        DateTime                           @default(now())
+  updatedAt                        DateTime                           @default(now())
+  EstacionamentoAndAdministradores EstacionamentoAndAdministradores[]
+  avaliacao                        avaliacao[]
+  endereco                         endereco[]
+}
+
+model veiculo {
+  id         Int      @id @default(autoincrement())
+  placa      String   @db.VarChar(10)
+  tipo       String   @db.VarChar(10)
+  modelo     String   @db.VarChar(20)
+  id_cliente Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+  cliente    cliente  @relation(fields: [id_cliente], references: [id])
+}

@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateAvaliacaoDto } from './dto/create-avaliacao.dto';
 import { UpdateAvaliacaoDto } from './dto/update-avaliacao.dto';
 import { PrismaService } from '@src/prisma/prisma.service';
@@ -24,28 +24,56 @@ export class AvaliacaoService {
     return avaliacaoCreated;
   }
 
-  async findAll(id: number) {
+  async findAll(id_estacionamento: number) {
     const avaliacoes = await this.avaliacaoRepository.avaliacao.findMany({
       where: {
-        id_estacionamento: id
+        id_estacionamento: id_estacionamento
       }
+    }).catch(err => {
+      throw new InternalServerErrorException("Error ao encontrar avaliações para esse estacionamento", err)
+
     });
 
-    if (!avaliacoes) {
-      throw new InternalServerErrorException("A")
+    return avaliacoes;
+  }
+
+  async findOne(id: number) {
+
+    const avaliacao = await this.avaliacaoRepository.avaliacao.findFirst({ where: { id } }).catch(err => {
+      throw new InternalServerErrorException("Erro ao encontrar avaliação", err)
+    })
+
+    if (!avaliacao) {
+
+      throw new NotFoundException("Avaliação não foi encontrada");
     }
-
+    return avaliacao;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} avaliacao`;
+  async update(id_avaliacao: number, updateAvaliacaoDto: UpdateAvaliacaoDto) {
+
+    const avaliacao = await this.avaliacaoRepository.avaliacao.update({
+      where: {
+        id: id_avaliacao
+      },
+      data: updateAvaliacaoDto
+    }).catch(err => {
+      throw new InternalServerErrorException("Erro ao atualizar avaliação", err)
+    })
+    if (!avaliacao) {
+
+      throw new NotFoundException("Avaliação não foi atualizada");
+    }
+    return avaliacao;
   }
 
-  update(id: number, updateAvaliacaoDto: UpdateAvaliacaoDto) {
-    return `This action updates a #${id} avaliacao`;
-  }
+  async remove(id: number) {
 
-  remove(id: number) {
-    return `This action removes a #${id} avaliacao`;
+    const avaliacao = await this.avaliacaoRepository.avaliacao.delete({ where: { id } }).catch(
+      err => {
+        throw new InternalServerErrorException("Erro ao deletar avaliação", err)
+      }
+    );
+    return avaliacao;
   }
 }

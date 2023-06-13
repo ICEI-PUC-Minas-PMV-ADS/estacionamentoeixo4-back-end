@@ -1,4 +1,4 @@
-import { CACHE_MANAGER, INestApplication } from "@nestjs/common";
+import { INestApplication } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { TestingModule, Test } from "@nestjs/testing";
@@ -19,6 +19,7 @@ import { Estacionamento } from "@prisma/client";
 import { AdministadorService } from "@src/administrador/services/administrador.service";
 import { CreateManagerDto } from "@src/administrador/dto/create-manager.dto";
 import { UpdateEstacionamentoDto } from "@src/estacionamento/dto/update-estacionamento.dto";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
 const BASE_URL = () => `http://localhost:${process.env.PORT}/api_producer/estacionamento`
 
 describe('EstacionamentoControler', () => {
@@ -49,7 +50,7 @@ describe('EstacionamentoControler', () => {
 
     app = module.createNestApplication();
 
-    await app.init()
+    await app.listen(3000);
   });
 
   afterAll(async () => {

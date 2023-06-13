@@ -99,7 +99,7 @@ model Reserva {
   duracao           Int
   horario_reserva   DateTime
   id_veiculo        Int
-  canceledAt        DateTime
+  canceledAt        DateTime?
 
   //Nome da tabela @@map
   @@map("reserva")

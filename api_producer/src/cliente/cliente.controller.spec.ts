@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ClienteController } from './cliente.controller';
+import { ClienteController } from './cliente.controller'; 
 import { ClienteService } from './cliente.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { CACHE_MANAGER } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 describe('ClientController', () => {
   let controller: ClienteController;
