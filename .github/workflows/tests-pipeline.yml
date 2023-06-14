@@ -21,10 +21,34 @@ jobs:
       - name: Checkout project 
         uses: actions/checkout@v2
 
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - uses: harmon758/postgresql-action@v1
+        with:
+          postgresql version: '12'
+
+      - name: Start Redis
+        uses: supercharge/redis-github-action@1.5.0
+        with:
+          redis-version: ${{ matrix.redis-version }}
+
+      - name: Start Bitname Kafka
+        uses: bbcCorp/kafka-actions@v1
+
       - name: Install dependencies
         working-directory: api_producer
-        run: yarn install
+        run: npm i
+
+      - name: Start backend
+        run: npm run start:dev
 
       - name: Run unit tests
         working-directory: api_producer/test
         run: npx jest unit
+
+      - name: Run integration tests
+        working-directory: api_producer/test
+        run: npm run test integration
