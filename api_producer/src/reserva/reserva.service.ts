@@ -24,13 +24,16 @@ export class ReservaService {
 
 
     async findOne(id: number) {
-        return await this.reservaRepository.reserva.findFirst({
+        const reserva = await this.reservaRepository.reserva.findFirst({
             where: {
-                id: id
+                id_cliente: Number(id)
             }
         }).catch(err => {
+            console.log(err);
             throw new InternalServerErrorException("Erro ao encontrar reserva", err)
         });
+
+        return reserva
     }
 
 }

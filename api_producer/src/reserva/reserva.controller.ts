@@ -70,7 +70,7 @@ export class ReservaController implements OnModuleInit {
     });
   }
 
-  @Get(':id_estacionamento')
+  @Get('/adm/:id_estacionamento')
   @ApiResponse({
     status: 200,
     description: 'Reserva cancelada com sucesso!',
@@ -79,8 +79,8 @@ export class ReservaController implements OnModuleInit {
     return await this.reservaService.findAll(id_estacionamento);
   }
 
-  @Get(':id_reserva')
-  async findReservasOne(@Param('id_reserva') id_reserva: number) {
-    return await this.reservaService.findOne(id_reserva);
+  @Get('/:id_cliente')
+  async findReservasOne(@Param('id_cliente') id_cliente: number) {
+    return await this.reservaService.findOne(id_cliente);
   }
 }
