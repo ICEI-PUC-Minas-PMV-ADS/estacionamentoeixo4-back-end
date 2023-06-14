@@ -1,6 +1,7 @@
 import { Decimal } from '@prisma/client/runtime';
 import EstacionamentoAndAdministradores from './EstacioanmentoAndAdmsinstradores';
 import { Endereco } from './Endereco';
+import { Avaliacao } from '@src/avaliacao/entities/avaliacao.entity';
 
 export default class Estacionamento {
   id?: number;
@@ -12,5 +13,6 @@ export default class Estacionamento {
   createdAt?: Date;
   updatedAt?: Date;
   EstacionamentoAndAdministradores?: EstacionamentoAndAdministradores[]
-  endereco?: Endereco
+  endereco?: Endereco[]
+  avaliacoes?: Avaliacao[]
 }

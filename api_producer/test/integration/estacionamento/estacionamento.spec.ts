@@ -1,4 +1,4 @@
-import { CACHE_MANAGER, INestApplication } from "@nestjs/common";
+import { INestApplication } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { TestingModule, Test } from "@nestjs/testing";
@@ -19,6 +19,7 @@ import { Estacionamento } from "@prisma/client";
 import { AdministadorService } from "@src/administrador/services/administrador.service";
 import { CreateManagerDto } from "@src/administrador/dto/create-manager.dto";
 import { UpdateEstacionamentoDto } from "@src/estacionamento/dto/update-estacionamento.dto";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
 const BASE_URL = () => `http://localhost:${process.env.PORT}/api_producer/estacionamento`
 
 describe('EstacionamentoControler', () => {
@@ -49,7 +50,7 @@ describe('EstacionamentoControler', () => {
 
     app = module.createNestApplication();
 
-    await app.init()
+    await app.listen(3000);
   });
 
   afterAll(async () => {
@@ -77,7 +78,7 @@ describe('EstacionamentoControler', () => {
       razao_social: "Fulano INC",
       cnpj,
       bairro: "Nova York",
-      cep: 12312442112345,
+      cep: 1231288,
       cidade: "California",
       endereco: "São bernado",
       lat: -12124124.1241245,
@@ -87,9 +88,7 @@ describe('EstacionamentoControler', () => {
 
     }
 
-    const createEstacionamento = await axios.post(`${BASE_URL()}/${createAdmin["id"]}`, createBody).then(res => res.data).catch(err => {
-      console.error(util.inspect(err, false, null, true))
-    })
+    const createEstacionamento = await axios.post(`${BASE_URL()}/${createAdmin["id"]}`, createBody).then(res => res.data)
     console.log("CREATE", createEstacionamento)
     expect(createEstacionamento["id"]).toBeTruthy()
     expect(createEstacionamento["preco"]).toBeTruthy()
@@ -100,7 +99,7 @@ describe('EstacionamentoControler', () => {
     expect(createEstacionamento["createdAt"]).toBeTruthy()
     expect(createEstacionamento["updatedAt"]).toBeTruthy()
 
-    const readEstacionamento = await axios.get(`${BASE_URL()}/encontrar/${createEstacionamento["id"]}`).then(res => res.data)
+    const readEstacionamento = await axios.get(`${BASE_URL()}/${createEstacionamento["id_estacionamento"]}`).then(res => res.data)
     console.log("READ", readEstacionamento)
     expect(readEstacionamento["id"]).toBeTruthy()
 
@@ -111,7 +110,7 @@ describe('EstacionamentoControler', () => {
       razao_social: "Fulano Atualizazo INC",
       cnpj,
       bairro: "Nova York",
-      cep: 123124421,
+      cep: 1231288,
       cidade: "California",
       endereco: "São bernado",
       lat: -12124124.1241245,
@@ -119,15 +118,15 @@ describe('EstacionamentoControler', () => {
       numero: 12,
       uf: "YK"
     }
-    const updateEstacionamento = await axios.patch(`${BASE_URL()}/atualizar/${createEstacionamento["id"]}`, updateBody).then(res => res.data).catch(e => console.error(util.inspect(e, false, null, true)))
+    const updateEstacionamento = await axios.patch(`${BASE_URL()}/atualizar/${createEstacionamento["id_estacionamento"]}`, updateBody).then(res => res.data)
     console.log("UPDATE", updateEstacionamento)
     expect(updateEstacionamento["razao_social"]).not.toBe(createEstacionamento["razao_social"])
 
-    const deleteEstacionamento = await axios.delete(`http://localhost:${process.env.PORT}/api_producer/estacionamento/deletar/${createEstacionamento['id']}/${createAdmin["id"]}`).then(res => res.data)
+    const deleteEstacionamento = await axios.delete(`http://localhost:${process.env.PORT}/api_producer/estacionamento/deletar/${createEstacionamento['id_estacionamento']}/${createAdmin["id"]}`).then(res => res.data).catch(e => e)
     console.log('DELETE', deleteEstacionamento)
-    const tryToReadEstacionamento = await axios.get(`${BASE_URL()}/encontrar/${createEstacionamento["id"]}`).then(res => res.data).catch(e => e)
+    const tryToReadEstacionamento = await axios.get(`${BASE_URL()}/encontrar/${createEstacionamento["id_estacionamento"]}`).then(res => res.data).catch(e => e)
     expect(tryToReadEstacionamento["id"]).toBeFalsy()
 
-    await axios.delete(`http://localhost:${process.env.PORT}/api_producer/administrador/${createAdmin?.id}`).then(res => res.data).catch(e => console.error(e))
+    await axios.delete(`http://localhost:${process.env.PORT}/api_producer/administrador/${createAdmin["id"]}`).then(res => res.data).catch(e => console.error(e))
   })
 })

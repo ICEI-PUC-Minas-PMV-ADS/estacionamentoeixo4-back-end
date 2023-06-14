@@ -101,7 +101,7 @@ services:
       - DATABASE_URL=postgresql://whypark:whypark123@pg:5432/db_why_park?schema=public
       - REDIS_PASS = password123
       - REDIS_URI = redis://default:${REDIS_PASS}@redis_whypk:6379
-      - KAKFA_URL=kafka:9094
+      - KAFKA_URL=kafka:9094
       - ENVIRONMENT=dev
       - JWT_ACCESS_SECRET=t323t24hgwafa=
       - JWT_REFRESH_SECRET=asfqi33fgtrfewf3
@@ -110,32 +110,7 @@ services:
       - 3000:3000
     expose:
       - 3000
-  # APi Consumer
-  api_consumer:
-    image: apiconsumer:dev
-    container_name: 'api_consumer'
-    depends_on:
-      - pg
-      - kafka
-    networks:
-      - backend-networks
-    volumes:
-      - consumer-data:/usr/app
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - DOTNET_USE_POLLING_FILE_WATCHER=1
-      - NUGET_PACKAGES=/root/.nuget/fallbackpackages2
-      - NUGET_FALLBACK_PACKAGES=/root/.nuget/fallbackpackages;/root/.nuget/fallbackpackages2
-      - Logging__LogLevel__Default=Information
-      - Logging__LogLevel__Microsoft.AspNetCore=Warning
-      - ConnectionStrings__DefaultConnection=Server=pg;Port=5432;Database=db_why_park;User Id=whypark;Password=whypark123
-    ports:
-     - 32770:443
-     - 32771:80
-    expose:
-       - 32770:443
-       - 32771:80
+
   # Frontend
   frontend:
     image: frontend
@@ -145,19 +120,36 @@ services:
     networks:
       - backend-networks
     environment:
-      - DEV=production
-      - VITE_PORT=3000
-      - VITE_SERVER=api_producer
+      DEV: production
+      VITE_PORT_SERVER: 3000
+      VITE_SERVER: localhost
     ports:
-      - 5173:5173
+      - 8000:8000
     expose:
-      - 5173
+      - 8000
     volumes:
       - frontend-data:/var/lib/frontend
 
+  # Api Consumer
+  api_consumer:
+    image: apiconsumer:latest
+    container_name: api_consumer
+    restart: unless-stopped
+    depends_on:
+      - kafka
+      - pg
+    links:
+      - kafka
+      - pg
+    networks:
+      - backend-networks
+    environment:
+      - DATABASE_URL=postgresql://whypark:whypark123@pg:5432/db_why_park?schema=public
+      - KAFKA_URL=kafka:9094
+    ports:
+      - 3030
+
 volumes:
-  consumer-data:
-    driver: local
   frontend-data:
     driver: local
   postgres-db-data:

@@ -85,6 +85,11 @@ export class EstacionamentoService {
     return { ...createEstacionamento, ...enderecoCreated };
   }
 
+  /**
+   * @function  findOne
+   * @param id 
+   * @returns 
+   */
   async findOne(id: number): Promise<Estacionamento> {
     const foundEstacionamento: Estacionamento =
       await this.clientRepository.estacionamento.findUnique({
@@ -103,25 +108,35 @@ export class EstacionamentoService {
     return foundEstacionamento;
   }
 
-  async findAll(): Promise<Estacionamento[]> {
+  /**
+   * @function findAll
+   * @returns 
+   */
+
+  async findAll(): Promise<{ estacionamentos: Estacionamento[] }> {
     const foundEstacionamento: Estacionamento[] =
       await this.clientRepository.estacionamento.findMany({
         include: {
-          Endereco: true
+          Endereco: true,
+          Avaliacao: true
         }
       });
-
     if (!foundEstacionamento) {
       throw new InternalServerErrorException(
         `Não existe estacionamento cadastrado no banco`,
       );
     }
-
-    return foundEstacionamento;
+    return {
+      estacionamentos: foundEstacionamento
+    };
   }
 
 
-
+  /**
+   * function findEstacionamentosAdm
+   * @param id_adm 
+   * @returns 
+   */
   async findEstacionamentosAdm(id_adm: number): Promise<Estacionamento[]> {
     const foundEstacionamento: Estacionamento[] =
       await this.clientRepository.estacionamento.findMany({
@@ -140,17 +155,28 @@ export class EstacionamentoService {
     return foundEstacionamento;
   }
 
+  /**
+   *  @function updateOne
+   * @param id 
+   * @param estacionamento 
+   * @param endereco 
+   * @returns 
+   */
   async updateOne(
     id: number,
     estacionamento: Estacionamento,
     endereco: Endereco,
   ): Promise<Estacionamento> {
+    const { cnpj: __cpj, ...data } = estacionamento
+
     // Atualiza o estacionamento
     const updatedEstacionamento: Estacionamento =
       await this.clientRepository.estacionamento.update({
         where: { id: id },
-        data: estacionamento,
-
+        data,
+        include: {
+          Endereco: true
+        }
       });
 
     if (!updatedEstacionamento) {
@@ -162,7 +188,7 @@ export class EstacionamentoService {
     // Atualiza o  endereço caso tenha atualização 
     const updateAddress = this.clientRepository.endereco.update({
       where: {
-        id: estacionamento.endereco.id
+        id: updatedEstacionamento["Endereco"][0].id
       },
       data: {
         cidade: endereco.cidade,
@@ -175,18 +201,23 @@ export class EstacionamentoService {
         lgt: endereco.lat,
       }
     })
-
-
-
-
     return { ...updatedEstacionamento, ...updateAddress };
   }
 
+  /**
+   * @function remove
+   * @param id_est 
+   * @param id_adm 
+   * @returns 
+   */
   async remove(id_est: number, id_adm: number): Promise<Estacionamento> {
 
     const alreadyExists: Estacionamento =
       await this.clientRepository.estacionamento.findFirst({
         where: { id: id_est },
+        include: {
+          Endereco: true
+        }
       });
 
     if (!alreadyExists) {
@@ -194,16 +225,6 @@ export class EstacionamentoService {
         `O estacionamento com id: ${id_est} não existe.`,
       );
     }
-
-    //Deleta na tabela de enderenço do estacionamento
-    await this.clientRepository.endereco.delete({
-      where: {
-        id: alreadyExists.endereco.id
-      }
-    }).catch(err => {
-      console.error(err)
-      throw new BadRequestException("Endereço e adminstiradores não encontardo!" + err)
-    })
 
     // Deleta o registro na tabela EstacionamentoAndAdministrador
     await this.clientRepository.estacionamentoAndAdministradores.delete({
@@ -218,6 +239,15 @@ export class EstacionamentoService {
       throw new BadRequestException("Estacioanmento e adminstiradores não encontardo!")
     })
 
+    //Deleta na tabela de enderenço do estacionamento
+    await this.clientRepository.endereco.delete({
+      where: {
+        id: alreadyExists["Endereco"][0].id
+      }
+    }).catch(err => {
+      console.error(err)
+      throw new BadRequestException("Endereço e adminstiradores não encontardo!" + err)
+    })
 
     //Deleta o estacionamento
     const deletedEstacionamento: Estacionamento =

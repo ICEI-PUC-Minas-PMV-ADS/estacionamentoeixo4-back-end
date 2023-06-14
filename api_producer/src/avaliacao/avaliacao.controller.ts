@@ -5,20 +5,21 @@ import { UpdateAvaliacaoDto } from './dto/update-avaliacao.dto';
 
 @Controller('avaliacao')
 export class AvaliacaoController {
-  constructor(private readonly avaliacaoService: AvaliacaoService) {}
+  constructor(private readonly avaliacaoService: AvaliacaoService) { }
 
   @Post()
   create(@Body() createAvaliacaoDto: CreateAvaliacaoDto) {
     return this.avaliacaoService.create(createAvaliacaoDto);
   }
 
-  @Get()
-  findAll() {
-    // return this.avaliacaoService.findAll();
+  @Get(':id_estacionamento')
+  findAllFeedsEstacionamento(@Param('id') id: string) {
+    return this.avaliacaoService.findAll(+id);
   }
 
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findFeedEstacionamento(@Param('id') id: string) {
     return this.avaliacaoService.findOne(+id);
   }
 
