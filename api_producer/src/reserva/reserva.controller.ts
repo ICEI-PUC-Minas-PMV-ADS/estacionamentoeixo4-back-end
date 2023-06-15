@@ -1,5 +1,5 @@
 import { Producer } from 'kafkajs';
-import { Controller, Post, Body, Patch, OnModuleInit, Inject, InternalServerErrorException, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Patch, OnModuleInit, Inject, InternalServerErrorException, Get, Param, BadRequestException } from '@nestjs/common';
 import { CreateReservaDto } from './dto/create-reserva.dto';
 import { CanceledReservaDto } from './dto/cancelar-reserva.dto';
 
@@ -19,7 +19,6 @@ export class ReservaController implements OnModuleInit {
     this.clientKafka.subscribeToResponseOf('cancelar_vaga');
     await this.clientKafka.connect().then((e) => {
       console.log("Kafka connected");
-
     }).catch(err => console.error("Kafka error", err));
   }
 
@@ -38,11 +37,16 @@ export class ReservaController implements OnModuleInit {
       'reservar_vaga',
       JSON.stringify({ data: createReservaDto }),
     ).subscribe({
-      next: (reply: any) => {
-        console.log("Vaga Criada com sucesso!", reply);
+      next: (reply: { CODE: number, MESSAGE: string }) => {
+        //Trata as menssaens 
+        if (reply.CODE === 405 || reply.CODE === 400)
+          return new BadRequestException(reply.MESSAGE);
+        else if (reply.CODE === 200 || reply.CODE === 201)
+          return reply.MESSAGE;
       },
       error: error => {
-        throw new InternalServerErrorException("Erro interno do kafka", error)
+        console.error(error)
+        return new InternalServerErrorException(error)
       }
     });
 
@@ -60,17 +64,22 @@ export class ReservaController implements OnModuleInit {
       'cancelar_vaga',
       JSON.stringify({ data: canceledReservaDto }),
     ).subscribe({
-      next: (reply: any) => {
-        console.log("Vaga atualizada com sucesso!", reply);
+      next: (reply: { CODE: number, MESSAGE: string }) => {
+        //Trata as menssaens 
+        if (reply.CODE === 405 || reply.CODE === 400)
+          return new BadRequestException(reply.MESSAGE);
+        else if (reply.CODE === 200 || reply.CODE === 201)
+          return reply.MESSAGE;
       },
       error: (error) => {
-        throw new InternalServerErrorException("Erro interno do kafka", error)
+        console.error(error)
+        return new InternalServerErrorException(error)
 
       }
     });
   }
 
-  @Get('/adm/:id_estacionamento')
+  @Get(':id_estacionamento')
   @ApiResponse({
     status: 200,
     description: 'Reserva cancelada com sucesso!',
@@ -79,8 +88,8 @@ export class ReservaController implements OnModuleInit {
     return await this.reservaService.findAll(id_estacionamento);
   }
 
-  @Get('/:id_cliente')
-  async findReservasOne(@Param('id_cliente') id_cliente: number) {
-    return await this.reservaService.findOne(id_cliente);
+  @Get(':id_reserva')
+  async findReservasOne(@Param('id_reserva') id_reserva: number) {
+    return await this.reservaService.findOne(id_reserva);
   }
 }

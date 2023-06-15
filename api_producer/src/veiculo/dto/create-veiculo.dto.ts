@@ -6,7 +6,6 @@ export class CreateVeiculoDto {
   @ApiProperty({
     type: 'string',
     description: 'Placa do veículo',
-    default: 'oab-xb33',
   })
   @MaxLength(10)
   placa: string;
@@ -14,7 +13,6 @@ export class CreateVeiculoDto {
   @IsString()
   @ApiProperty({
     type: 'string',
-    default: 'Carro',
     description: 'Tipo do veículo',
   })
   @MaxLength(10)
@@ -23,7 +21,6 @@ export class CreateVeiculoDto {
   @IsString()
   @ApiProperty({
     type: 'string',
-    default: 'Fox Wolksvagem',
     description: 'Modelo do veículo',
   })
   @MaxLength(20)
@@ -32,7 +29,6 @@ export class CreateVeiculoDto {
   @IsInt()
   @ApiProperty({
     type: 'number',
-    description: 'Id do Cliente',
     default: 1,
   })
   @IsNotEmpty()

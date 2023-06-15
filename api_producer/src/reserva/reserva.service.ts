@@ -15,7 +15,7 @@ export class ReservaService {
                                           JOIN cliente ON r.id_cliente = cliente.id 
                                           WHERE r.id_estacionamento = ${Number(id_estacionamento)};`
             ).catch(err => {
-                throw new InternalServerErrorException("Erro ao listar reservas", err)
+                return new InternalServerErrorException("Erro ao listar reservas" + err)
 
             });
 
@@ -26,11 +26,11 @@ export class ReservaService {
     async findOne(id: number) {
         const reserva = await this.reservaRepository.reserva.findFirst({
             where: {
-                id_cliente: Number(id)
+                id_cliente: id
             }
         }).catch(err => {
             console.log(err);
-            throw new InternalServerErrorException("Erro ao encontrar reserva", err)
+            return new InternalServerErrorException("Erro ao encontrar reserva" + err)
         });
 
         return reserva

@@ -14,7 +14,6 @@ export class CreateClienteDto {
     type: 'string',
     description: 'Nome do cliente',
   })
-  @MinLength(10)
   name: string;
 
   @IsString()

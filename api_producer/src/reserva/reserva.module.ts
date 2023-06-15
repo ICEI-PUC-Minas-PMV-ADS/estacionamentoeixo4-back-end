@@ -18,7 +18,7 @@ import { PrismaService } from '@src/prisma/prisma.service';
           },
 
           consumer: {
-            groupId: 'reserva-consumer-group',
+            groupId: 'reserva-consumer-group' + Math.random(),
           },
         },
       },
