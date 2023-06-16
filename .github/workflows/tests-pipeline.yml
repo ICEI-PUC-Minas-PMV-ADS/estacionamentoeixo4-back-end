@@ -25,7 +25,7 @@ jobs:
           - 9092:9094
           
     env:
-      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
 
     steps:
