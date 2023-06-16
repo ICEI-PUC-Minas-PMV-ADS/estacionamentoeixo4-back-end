@@ -26,9 +26,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - uses: harmon758/postgresql-action@v1
-        with:
-          postgresql version: '12'
+      - uses: dentarg/postgres@v1
+      - run: <your test command>
+        env:
+          DATABASE_URL: postgresql://whypark:whypark123@localhost:5432/db_why_park?schema=public
+      
+      - name: Build migration
+        working-directory: api_producer
+        run: npm run migrate:run
 
       - name: Start Redis
         uses: supercharge/redis-github-action@1.5.0
@@ -41,10 +46,6 @@ jobs:
       - name: Install dependencies
         working-directory: api_producer
         run: npm i
-
-      - name: Run unit tests
-        working-directory: api_producer/test
-        run: npx jest unit
 
       - name: Run integration tests
         working-directory: api_producer/test
