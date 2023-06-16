@@ -27,7 +27,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - uses: dentarg/postgres@v1
-      - run: <your test command>
         env:
           DATABASE_URL: postgresql://whypark:whypark123@localhost:5432/db_why_park?schema=public
       
