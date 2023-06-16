@@ -11,8 +11,8 @@ on:
       - develop
 
 jobs:
-  e2e-tests:
-    name: End to end tests
+  integration-tests:
+    name: Integration tests
 
     runs-on: ubuntu-latest
 
@@ -42,10 +42,6 @@ jobs:
         working-directory: api_producer
         run: npm i
 
-      - name: Start backend
-        working-directory: api_producer
-        run: npm run start:dev
-
       - name: Run unit tests
         working-directory: api_producer/test
         run: npx jest unit
@@ -53,3 +49,21 @@ jobs:
       - name: Run integration tests
         working-directory: api_producer/test
         run: npm run test integration
+  
+  unit-tests:
+    name: Unit tests
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout project 
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        working-directory: api_producer
+        run: npm i
+
+      - name: Run unit tests
+        working-directory: api_producer/test
+        run: npx jest unit
