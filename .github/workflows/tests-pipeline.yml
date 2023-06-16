@@ -1,5 +1,6 @@
 name: Tests Pipeline
 on:
+
   push:
     branches:
       - '**' # em qualquer branch que for realizado push, atira action
@@ -9,6 +10,9 @@ on:
       - main
       - master
       - develop
+
+env:
+  KAKFA_URL: localhost:9094
 
 jobs:
   integration-tests:
