@@ -11,21 +11,22 @@ on:
       - master
       - develop
 
-env:
-  DATABASE_URL: postgresql://whypark:whypark123@localhost:5432/db_why_park?schema=public
-  REDIS_PASS: password123
-  REDIS_URI: redis://default:${REDIS_PASS}@localhost:6379
-  KAFKA_URL: host.docker.internal:9094
-  ENVIRONMENT: dev
-  JWT_ACCESS_SECRET: t323t24hgwafa=
-  JWT_REFRESH_SECRET: asfqi33fgtrfewf3
-  PORT: 3000
-
 jobs:
   integration-tests:
     name: Integration tests
 
     runs-on: ubuntu-latest
+
+    services:
+      kafka:
+        image: wurstmeister/kafka:2.12-2.5.0
+        ports:   
+          - 2181:2181
+          - 9092:9094
+          
+    env:
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
 
     steps:
 
