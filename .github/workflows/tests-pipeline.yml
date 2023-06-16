@@ -26,9 +26,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - uses: dentarg/postgres@v1
-        env:
-          DATABASE_URL: postgresql://whypark:whypark123@localhost:5432/db_why_park?schema=public
+      - name: Setup Postgresql
+        uses: harmon758/postgresql-action@v1
+        with:
+          postgresql version: '12'
+          postgresql db: whypark
+          postgresql user: whypark
+          postgresql password: whypark123
       
       - name: Build migration
         working-directory: api_producer
