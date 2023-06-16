@@ -7,7 +7,6 @@
 /api_producer/package-lock.json
 /api_producer/node_modules
 /api_producer/yarn.lock
-/api_producer/.env
 
 # Igoner consumer
 /api_consumer/dist
