@@ -8,14 +8,9 @@ import { AuthService } from "@src/auth/auth.service";
 import { ClienteService } from "@src/cliente/cliente.service";
 import { PrismaService } from "@src/prisma/prisma.service";
 import * as request from 'supertest';
-import axios from 'axios';
-import { AuthDTO } from "@src/auth/dto/me.input";
 import { CreateClienteDto } from "@src/cliente/dto/create-cliente.dto";
 import {AdministadorService} from "@src/administrador/services/administrador.service";
 import {UpdateClienteDto} from "@src/cliente/dto/update-client.dto";
-import * as util from "util"
-
-const BASE_URL = () => `http://localhost:${process.env.PORT}/api_producer/cliente`
 
 describe('ClienteControler', () => {
     let service: AuthService
@@ -37,6 +32,7 @@ describe('ClienteControler', () => {
         PrismaService,
         AppModule
       ],
+      imports: [AppModule]
     }).compile();
 
     service = module.get<AuthService>(AuthService);
@@ -66,7 +62,12 @@ describe('ClienteControler', () => {
         uuid_firebase
       }
 
-      const createCliente = await axios.post(`${BASE_URL()}`, createBody).then(res => res.data)
+      const createCliente = await request(app.getHttpServer())
+            .post(`/cliente`)
+            .send(createBody)
+            .then(res => res.body)
+            .catch(e => console.error(e))
+      //const createCliente = await axios.post(`${BASE_URL()}`, createBody).then(res => res.data)
       console.log("CREATE", createCliente)
       expect(createCliente['id']).toBeTruthy()
       expect(createCliente['name']).toBeTruthy()
@@ -74,18 +75,35 @@ describe('ClienteControler', () => {
       expect(createCliente['createdAt']).toBeTruthy()
       expect(createCliente['updatedAt']).toBeTruthy()
 
-      const readCliente = await axios.get(`${BASE_URL()}/${createCliente['id']}`).then(res => res.data).catch(e => console.error(e))
+      const readCliente = await request(app.getHttpServer())
+            .get(`/cliente/${createCliente['id']}`)
+            .then(res => res.body)
+            .catch(e => console.error(e))
+      //const readCliente = await axios.get(`${BASE_URL()}/${createCliente['id']}`).then(res => res.data).catch(e => console.error(e))
       console.log("READ", readCliente)
       expect(readCliente['id']).toBeTruthy()
 
       const updateBody: UpdateClienteDto = { name: "Fulano Atualizado", cpf, email }
-      const updateCliente = await axios.patch(`${BASE_URL()}/${createCliente['id']}`, updateBody).then(res => res.data)
+      const updateCliente = await request(app.getHttpServer())
+            .patch(`/cliente/${createCliente['id']}`)
+            .send(updateBody)
+            .then(res => res.body)
+            .catch(e => console.error(e))
+      //const updateCliente = await axios.patch(`${BASE_URL()}/${createCliente['id']}`, updateBody).then(res => res.data)
       console.log("UPDATE", updateCliente)
       expect(createCliente['name']).not.toBe(updateCliente['name'])
 
-      const deleteCliente = await axios.delete(`${BASE_URL()}/${createCliente?.id}`).then(res => res.data)
+      const deleteCliente = await request(app.getHttpServer())
+            .delete(`/cliente/${createCliente['id']}`)
+            .then(res => res.body)
+            .catch(e => console.error(e))
+      //const deleteCliente = await axios.delete(`${BASE_URL()}/${createCliente?.id}`).then(res => res.data)
       console.log("DELETE", deleteCliente)
-      const tryToReadDeletedCliente = await axios.get(`${BASE_URL()}/${createCliente['id']}`).then(res => res.data).catch(e => e)
+      const tryToReadDeletedCliente = await request(app.getHttpServer())
+            .get(`/cliente/${createCliente['id']}`)
+            .then(res => res.body)
+            .catch(e => console.error(e))
+      //const tryToReadDeletedCliente = await axios.get(`${BASE_URL()}/${createCliente['id']}`).then(res => res.data).catch(e => e)
       expect(tryToReadDeletedCliente["id"]).toBeFalsy()
     })
 })

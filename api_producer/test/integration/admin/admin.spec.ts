@@ -1,5 +1,5 @@
 import { INestApplication } from "@nestjs/common";
-import {CACHE_MANAGER} from "@nestjs/cache-manager";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { TestingModule, Test } from "@nestjs/testing";
@@ -9,18 +9,12 @@ import { AuthService } from "@src/auth/auth.service";
 import { ClienteService } from "@src/cliente/cliente.service";
 import { PrismaService } from "@src/prisma/prisma.service";
 import * as request from 'supertest';
-import axios from 'axios';
-import { AuthDTO } from "@src/auth/dto/me.input";
-import { CreateClienteDto } from "@src/cliente/dto/create-cliente.dto";
-import * as util from "util"
 import { EstacionamentoService } from "@src/estacionamento/estacionamento.service";
-import {AdministadorService} from "@src/administrador/services/administrador.service";
-import {CreateManagerDto} from "@src/administrador/dto/create-manager.dto";
+import { AdministadorService } from "@src/administrador/services/administrador.service";
+import { CreateManagerDto } from "@src/administrador/dto/create-manager.dto";
 import { VeiculoService } from "@src/veiculo/veiculo.service";
 import { RedisModule } from '../../../redis/redis.module';
-import {UpdateManagerDto} from "@src/administrador/dto/update-manager.dto";
-
-const BASE_URL = (uri: string = "", route: string = "administrador") => `http://localhost:${process.env.PORT}/api_producer/${route}/${uri}`
+import { UpdateManagerDto } from "@src/administrador/dto/update-manager.dto";
 
 describe('ManagerControler', () => {
     let service: AuthService
@@ -45,6 +39,7 @@ describe('ManagerControler', () => {
                 AppModule,
                 RedisModule
             ],
+            imports: [AppModule]
         }).compile();
 
         service = module.get<AuthService>(AuthService);
@@ -74,7 +69,11 @@ describe('ManagerControler', () => {
             uuid_firebase
         }
 
-        const createAdmin = await axios.post(`${BASE_URL()}`, createBody).then(res => res.data)
+        const createAdmin = await request(app.getHttpServer())
+            .post(`/administrador`)
+            .send(createBody)
+            .then(res => res.body)
+            .catch(e => console.error(e))
         console.log("CREATE", createAdmin)
         expect(createAdmin["id"]).toBeTruthy()
         expect(createAdmin["createdAt"]).toBeTruthy()
@@ -82,18 +81,31 @@ describe('ManagerControler', () => {
         expect(createAdmin["nome"]).toBeTruthy()
         expect(createAdmin["email"]).toBeTruthy()
 
-        const readAdmin = await axios.get(`${BASE_URL()}${createAdmin?.id}`).then(res => res.data)
+        const readAdmin = await request(app.getHttpServer())
+            .get(`/administrador/${createAdmin?.id}`)
+            .then(res => res.body)
+            .catch(e => console.error(e))
         console.log("READ", createAdmin)
         expect(readAdmin["id"]).toBeTruthy()
 
         const updateBody: UpdateManagerDto = { nome: "Fulano Atualizado", email }
-        const updateAdmin = await axios.patch(`${BASE_URL()}${createAdmin?.id}`, updateBody).then(res => res.data)
+        const updateAdmin = await request(app.getHttpServer())
+            .patch(`/administrador/${createAdmin?.id}`)
+            .send(updateBody)
+            .then(res => res.body)
+            .catch(e => console.error(e))
         console.log("UPDATE", updateAdmin)
         expect(createAdmin["nome"]).not.toBe(updateAdmin["nome"])
 
-        const deleteAdmin = await axios.delete(`${BASE_URL()}${createAdmin?.id}`).then(res => res.data)
+        const deleteAdmin = await request(app.getHttpServer())
+            .delete(`/administrador/${createAdmin?.id}`)
+            .then(res => res.body)
+            .catch(e => console.error(e))
         console.log("DELETE", deleteAdmin)
-        const tryToReadDeletedAdmin = await axios.get(`${BASE_URL()}${createAdmin?.id}`).then(res => res.data).catch(e => e)
+        const tryToReadDeletedAdmin = await request(app.getHttpServer())
+            .get(`/administrador/${createAdmin?.id}`)
+            .then(res => res.body)
+            .catch(() => null)
         expect(tryToReadDeletedAdmin["id"]).toBeFalsy()
 
     })
