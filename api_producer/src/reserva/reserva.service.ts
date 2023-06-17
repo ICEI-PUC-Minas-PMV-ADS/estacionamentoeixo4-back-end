@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaService } from '@src/prisma/prisma.service';
 
@@ -21,6 +21,41 @@ export class ReservaService {
 
         return reservas
     }
+
+    async findAllAdm(id_administrador: number) {
+        const admAndEstacionamento = await this.reservaRepository.estacionamentoAndAdministradores.findMany({
+            where: {
+                id_administrador: Number(id_administrador)
+            }
+        });
+
+
+
+        if (!admAndEstacionamento) {
+            return new BadRequestException("Estacioanmento não associado a essa reserva!")
+        }
+        let estacionamentos = admAndEstacionamento.map(park => park.id_estacionamento);
+
+        const reservas = await this.reservaRepository
+            .$queryRaw(Prisma.sql`SELECT 
+                                        name,
+                                        duracao, 
+                                        horario_reserva,
+                                        razao_social
+                                    FROM reserva AS r
+                                    JOIN cliente AS c  ON r.id_cliente = c.id 
+                                    JOIN estacionamento AS e ON r.id_estacionamento = e.id
+                                    WHERE "canceledAt" IS NULL AND
+                                    id_estacionamento IN (${Prisma.join(estacionamentos, ',')})`
+            ).catch(err => {
+                return new InternalServerErrorException("Erro ao listar reservas" + err)
+
+            });
+
+        return reservas
+    }
+
+
 
 
     async findOne(id: number) {

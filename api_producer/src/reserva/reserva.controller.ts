@@ -88,6 +88,16 @@ export class ReservaController implements OnModuleInit {
     return await this.reservaService.findAll(id_estacionamento);
   }
 
+
+  @Get('/adm/:id')
+  @ApiResponse({
+    status: 200,
+    description: 'Busca todos as reservas!',
+  })
+  async findReservas(@Param('id') id: number) {
+    return await this.reservaService.findAllAdm(id);
+  }
+
   @Get(':id_reserva')
   async findReservasOne(@Param('id_reserva') id_reserva: number) {
     return await this.reservaService.findOne(id_reserva);
