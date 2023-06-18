@@ -14,7 +14,8 @@ import { PrismaService } from '@src/prisma/prisma.service';
         transport: Transport.KAFKA,
         options: {
           client: {
-            brokers: [process.env.KAFKA_URL],
+            // TODO: Teste
+            brokers: ["localhost:9094"],
           },
 
           consumer: {
