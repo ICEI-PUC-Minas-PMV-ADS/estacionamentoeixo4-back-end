@@ -48,14 +48,8 @@ jobs:
         with:
           redis-version: ${{ matrix.redis-version }}
 
-      - name: Compose Kafka Zookeeper
-        run: cd dockers && cd kafka && cd zoo && docker-compose -f "docker-compose.yml" up -d --build
-
-      - name: Compose Kafka 
-        run: cd dockers && cd kafka && docker-compose -f "docker-compose.yml" up -d --build
-
-      - name: Compose Kafka UI
-        run: cd dockers && cd kafka && cd ui && docker-compose -f "docker-compose.yml" up -d --build
+      - name: Compose Kafka
+        run: docker-compose -f "docker-compose.yml" up -d --build
 
       - name: Run integration tests
         working-directory: api_producer/test

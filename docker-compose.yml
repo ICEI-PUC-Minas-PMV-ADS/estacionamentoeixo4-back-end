@@ -111,25 +111,6 @@ services:
     expose:
       - 3000
 
-  # Frontend
-  frontend:
-    image: frontend
-    container_name: frontend
-    depends_on:
-      - api_producer
-    networks:
-      - backend-networks
-    environment:
-      DEV: production
-      VITE_PORT_SERVER: 3000
-      VITE_SERVER: localhost
-    ports:
-      - 8000:8000
-    expose:
-      - 8000
-    volumes:
-      - frontend-data:/var/lib/frontend
-
   # Api Consumer
   api_consumer:
     image: apiconsumer:latest
