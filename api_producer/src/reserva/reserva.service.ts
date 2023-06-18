@@ -61,11 +61,27 @@ export class ReservaService {
     async findOne(id: number) {
         const reserva = await this.reservaRepository.reserva.findFirst({
             where: {
-                id_cliente: id
+                id: id
             }
         }).catch(err => {
             console.log(err);
             return new InternalServerErrorException("Erro ao encontrar reserva" + err)
+        });
+
+        return reserva
+    }
+
+
+
+    async findReservasUser(id: number) {
+        const reserva = await this.reservaRepository.reserva.findMany({
+            where: {
+                id_cliente: id,
+                canceledAt: null
+            }
+        }).catch(err => {
+            console.log(err);
+            return new InternalServerErrorException("Erro ao encontrar reservas do cliente" + err)
         });
 
         return reserva

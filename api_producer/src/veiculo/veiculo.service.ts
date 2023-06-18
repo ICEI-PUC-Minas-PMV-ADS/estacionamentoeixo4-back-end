@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  CACHE_MANAGER,
   Inject,
   Injectable,
   InternalServerErrorException,
@@ -10,14 +9,12 @@ import { CreateVeiculoDto } from './dto/create-veiculo.dto';
 import { UpdateVeiculoDto } from './dto/update-veiculo.dto';
 import { PrismaService } from '@src/prisma/prisma.service';
 import { Veiculo } from '@prisma/client';
-import { Cache } from 'cache-manager';
 
 @Injectable()
 export class VeiculoService {
   constructor(
     private readonly veiculoRepository: PrismaService,
-    @Inject(CACHE_MANAGER) private readonly veiculoCache: Cache,
-  ) {}
+  ) { }
 
   /**
    * @function Create Veiculo
@@ -44,11 +41,6 @@ export class VeiculoService {
         `Não foi possível criar o veículo `,
       );
     }
-
-    await this.veiculoCache.set(
-      `user_crated_${veiculoResult.id}`,
-      veiculoResult,
-    );
     return veiculoResult;
   }
 
@@ -57,11 +49,23 @@ export class VeiculoService {
 
     if (!veiculosResultDB) throw new NotFoundException('Não existe veículos!');
 
-    await this.veiculoCache.del('veiculos_cache');
-    await this.veiculoCache.set('veiculos_cache', veiculosResultDB);
 
     return veiculosResultDB;
   }
+
+  async findAllCliente(id: number) {
+    const veiculosResultDB = await this.veiculoRepository.veiculo.findMany({
+      where: {
+        id_cliente: id
+      }
+    });
+
+    if (!veiculosResultDB)
+      return new NotFoundException('Não existe veículos!');
+
+    return veiculosResultDB;
+  }
+
 
   async findOne(id: number) {
     const veiculosResultDB = await this.veiculoRepository.veiculo.findUnique({
@@ -87,11 +91,6 @@ export class VeiculoService {
       );
     }
 
-    await this.veiculoCache.set(
-      `user_crated_${veiculoUpdateResult.id}`,
-      veiculoUpdateResult,
-    );
-
     return veiculoUpdateResult;
   }
 
@@ -107,8 +106,6 @@ export class VeiculoService {
         `Não foi possível remover o veículo `,
       );
     }
-
-    await this.veiculoCache.del('veiculos_cache');
 
     return veiculoDeleteResult;
   }
