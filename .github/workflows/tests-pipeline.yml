@@ -44,10 +44,17 @@ jobs:
         with:
           redis-version: ${{ matrix.redis-version }}
 
-      - name: Start Bitname Kafka
-        uses: bbcCorp/kafka-actions@v1
-        with:
-          kafka port: 9094
+      - name: Kafka UI
+        working-directory: kafka/ui
+        run: docker-compose -f "docker-compose.yml" up -d --build
+
+      - name: Kafka ZOO
+        working-directory: kafka/zoo
+        run: docker-compose -f "docker-compose.yml" up -d --build
+
+      - name: Kafka 
+        working-directory: kafka
+        run: docker-compose -f "docker-compose.yml" up -d --build
 
       - name: Install dependencies
         working-directory: api_producer
