@@ -27,6 +27,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Install dependencies
+        working-directory: api_producer
+        run: npm i
+
       - name: Setup Postgresql
         uses: harmon758/postgresql-action@v1
         with:
@@ -52,10 +56,6 @@ jobs:
 
       - name: Compose Kafka UI
         run: cd dockers && cd kafka && cd ui && docker-compose -f "docker-compose.yml" up -d --build
-
-      - name: Install dependencies
-        working-directory: api_producer
-        run: npm i
 
       - name: Run integration tests
         working-directory: api_producer/test
