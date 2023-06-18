@@ -21,12 +21,17 @@ export class ReservaService {
     })
 
     if (!reservaCreated) {
-      return new InternalServerErrorException("Ocorreu algum erro ao inserir reserva")
+      return {
+        CODE: 405,
+        MESSAGE: "Ocorreu algum erro ao reservar vaga, tente novamente por favor!"
+      };
+
     }
-
-    return reservaCreated;
+    return {
+      CODE: 201,
+      MESSAGE: "Reserva feita com sucesso!"
+    };
   }
-
 
   /**
    *  Update Reserva
@@ -44,26 +49,33 @@ export class ReservaService {
         id_veiculo,
         id_estacionamento
       }
-    });
+    })
 
     if (!findFirstReserva) {
-      return new BadRequestException("Reserva não encontrada!")
+      return {
+        CODE: 400,
+        MESSAGE: "Reserva não encontrada, tente novamente por favor!"
+      };
     }
 
-    const reservaUpdated = await this.reservaRepository.reserva.update({
+    const updateReserva = await this.reservaRepository.reserva.update({
       where: {
         id: findFirstReserva.id
       },
       data: { ...findFirstReserva, ...reservaUpdate }
-    });
+    })
 
+    if (!updateReserva) {
+      return {
+        CODE: 405,
+        MESSAGE: "Ocorreu algum erro ao cancelar reserva, tente novamente por favor!"
+      };
 
-    if (!reservaUpdated) {
-      return new InternalServerErrorException("Ocorreu algum erro ao atualizar reserva")
     }
-
-
-    return reservaUpdated
+    return {
+      CODE: 200,
+      MESSAGE: "Reserva cancelada com sucesso!"
+    };
   }
 
 }
