@@ -31,20 +31,12 @@ jobs:
         working-directory: api_producer
         run: npm i
 
-      - name: Setup Postgresql
-        uses: harmon758/postgresql-action@v1
-        with:
-          postgresql version: '12'
-          postgresql db: whypark
-          postgresql user: whypark
-          postgresql password: whypark123
-      
+      - name: Build containers
+        run: docker-compose -f "docker-compose.yml" up -d --build
+
       - name: Build migration
         working-directory: api_producer
         run: npm run migrate:run
-
-      - name: Build containers
-        run: docker-compose -f "docker-compose.yml" up -d --build
 
       - name: Run integration tests
         working-directory: api_producer/test

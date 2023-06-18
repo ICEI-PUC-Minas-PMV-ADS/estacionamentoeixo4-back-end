@@ -84,55 +84,8 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
     networks:
       - backend-networks
-  # Api Producer
-  api_producer:
-    image: producerapi
-    container_name: api_producer
-    restart: unless-stopped
-    depends_on:
-      - redis_whypk
-      - kafka
-      - pg
-    links:
-      - redis_whypk
-    networks:
-      - backend-networks
-    environment:
-      - DATABASE_URL=postgresql://whypark:whypark123@pg:5432/db_why_park?schema=public
-      - REDIS_PASS = password123
-      - REDIS_URI = redis://default:${REDIS_PASS}@redis_whypk:6379
-      - KAFKA_URL=kafka:9094
-      - ENVIRONMENT=dev
-      - JWT_ACCESS_SECRET=t323t24hgwafa=
-      - JWT_REFRESH_SECRET=asfqi33fgtrfewf3
-      - PORT=3000
-    ports:
-      - 3000:3000
-    expose:
-      - 3000
-
-  # Api Consumer
-  api_consumer:
-    image: apiconsumer:latest
-    container_name: api_consumer
-    restart: unless-stopped
-    depends_on:
-      - kafka
-      - pg
-    links:
-      - kafka
-      - pg
-    networks:
-      - backend-networks
-    environment:
-      - DATABASE_URL=postgresql://whypark:whypark123@pg:5432/db_why_park?schema=public
-      - KAFKA_URL=kafka:9094
-    ports:
-      - 3030
 
 volumes:
-  frontend-data:
-    driver: local
   postgres-db-data:
     driver: local
   redis-data:
