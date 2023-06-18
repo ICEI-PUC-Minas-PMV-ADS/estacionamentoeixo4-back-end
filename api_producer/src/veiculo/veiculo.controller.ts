@@ -14,7 +14,7 @@ import { ApiTags, ApiBody, ApiResponse } from '@nestjs/swagger';
 @ApiTags('Veículo')
 @Controller('veiculo')
 export class VeiculoController {
-  constructor(private readonly veiculoService: VeiculoService) {}
+  constructor(private readonly veiculoService: VeiculoService) { }
 
   @Post()
   @ApiBody({ description: 'Veículo criado', type: CreateVeiculoDto })
@@ -46,6 +46,17 @@ export class VeiculoController {
   findOne(@Param('id') id: string) {
     return this.veiculoService.findOne(+id);
   }
+
+  @Get('/cliente/:id')
+  @ApiResponse({
+    status: 200,
+    description: 'Recupera os veículo pelo id do cliente',
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  findOneCliente(@Param('id') id: string) {
+    return this.veiculoService.findAllCliente(+id);
+  }
+
 
   @Patch(':id')
   @ApiBody({ description: 'Veículos', type: UpdateVeiculoDto })

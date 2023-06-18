@@ -32,7 +32,5 @@ export class PrismaService
       await app.close();
     });
   }
-  get veiculo() {
-    return this.veiculo;
-  }
+
 }
