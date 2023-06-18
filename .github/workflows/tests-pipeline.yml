@@ -44,14 +44,14 @@ jobs:
         with:
           redis-version: ${{ matrix.redis-version }}
 
-      - name: Kafka 
+      - name: Compose Kafka Zookeeper
+        run: cd dockers && cd kafka && cd zoo && docker-compose -f "docker-compose.yml" up -d --build
+
+      - name: Compose Kafka 
         run: cd dockers && cd kafka && docker-compose -f "docker-compose.yml" up -d --build
 
-      - name: Kafka UI
+      - name: Compose Kafka UI
         run: cd dockers && cd kafka && cd ui && docker-compose -f "docker-compose.yml" up -d --build
-
-      - name: Kafka ZOO
-        run: cd dockers && cd kafka && cd zoo && docker-compose -f "docker-compose.yml" up -d --build
 
       - name: Install dependencies
         working-directory: api_producer
