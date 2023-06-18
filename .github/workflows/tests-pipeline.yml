@@ -43,12 +43,7 @@ jobs:
         working-directory: api_producer
         run: npm run migrate:run
 
-      - name: Start Redis
-        uses: supercharge/redis-github-action@1.5.0
-        with:
-          redis-version: ${{ matrix.redis-version }}
-
-      - name: Compose Kafka
+      - name: Build containers
         run: docker-compose -f "docker-compose.yml" up -d --build
 
       - name: Run integration tests
