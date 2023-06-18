@@ -48,11 +48,9 @@ jobs:
         run: cd kafka && cd ui && docker-compose -f "docker-compose.yml" up -d --build
 
       - name: Kafka ZOO
-        working-directory: kafka/zoo
         run: cd kafka && cd zoo && docker-compose -f "docker-compose.yml" up -d --build
 
       - name: Kafka 
-        working-directory: kafka
         run: cd kafka && docker-compose -f "docker-compose.yml" up -d --build
 
       - name: Install dependencies
