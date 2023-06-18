@@ -44,6 +44,9 @@ jobs:
         with:
           redis-version: ${{ matrix.redis-version }}
 
+      - name: Start backend-networks
+        run: docker-compose -f "docker-compose.yml" up -d --build
+
       - name: Compose Kafka Zookeeper
         run: cd dockers && cd kafka && cd zoo && docker-compose -f "docker-compose.yml" up -d --build
 
