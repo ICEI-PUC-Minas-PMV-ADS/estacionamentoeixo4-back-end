@@ -44,6 +44,11 @@ jobs:
         with:
           redis-version: ${{ matrix.redis-version }}
 
+      - name: Start Bitname Kafka
+        uses: bbcCorp/kafka-actions@v1
+        with:
+          kafka port: 9094
+
       - name: Install dependencies
         working-directory: api_producer
         run: npm i
