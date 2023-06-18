@@ -53,16 +53,16 @@ export class ReservaController implements OnModuleInit {
 
   }
 
-  @Patch()
+  @Patch('/cancelar/:id')
   @ApiResponse({
     status: 200,
     description: 'Reserva cancelada com sucesso!',
   })
   @ApiBody({ type: [CanceledReservaDto], description: 'Reserva cancelada' })
-  async update(@Body() canceledReservaDto: CanceledReservaDto) {
+  async update(@Param('id') id: number) {
     this.clientKafka.send(
       'cancelar_vaga',
-      JSON.stringify({ data: canceledReservaDto }),
+      JSON.stringify({ data: id }),
     ).subscribe({
       next: (reply: { CODE: number, MESSAGE: string }) => {
         //Trata as menssaens 
