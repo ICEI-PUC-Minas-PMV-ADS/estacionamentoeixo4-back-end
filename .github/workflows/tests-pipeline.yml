@@ -17,17 +17,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    services:
-      kafka:
-        image: wurstmeister/kafka:2.12-2.5.0
-        ports:   
-          - 2181:2181
-          - 9092:9094
-          
-    env:
-      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
-
     steps:
 
       - name: Checkout project 
@@ -54,15 +43,6 @@ jobs:
         uses: supercharge/redis-github-action@1.5.0
         with:
           redis-version: ${{ matrix.redis-version }}
-
-      - name: Start Kafka
-        uses: 280780363/kafka-action@v1.0
-        with:
-          kafka version: "latest" # Optional, kafka version
-          zookeeper version: "latest" # Optional, zookeeper version
-          kafka port: 9094 # Optional, kafka port
-          zookeeper port: 2181 # Optional, zookeeper port
-          auto create topic: "true" # Optional, auto create kafka topic
 
       - name: Install dependencies
         working-directory: api_producer
