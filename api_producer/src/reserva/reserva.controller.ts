@@ -1,5 +1,5 @@
 import { Producer } from 'kafkajs';
-import { Controller, Post, Body, Patch, OnModuleInit, Inject, InternalServerErrorException, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Patch, OnModuleInit, Inject, InternalServerErrorException, Get, Param, BadRequestException } from '@nestjs/common';
 import { CreateReservaDto } from './dto/create-reserva.dto';
 import { CanceledReservaDto } from './dto/cancelar-reserva.dto';
 
@@ -19,7 +19,6 @@ export class ReservaController implements OnModuleInit {
     this.clientKafka.subscribeToResponseOf('cancelar_vaga');
     await this.clientKafka.connect().then((e) => {
       console.log("Kafka connected");
-
     }).catch(err => console.error("Kafka error", err));
   }
 
@@ -38,11 +37,16 @@ export class ReservaController implements OnModuleInit {
       'reservar_vaga',
       JSON.stringify({ data: createReservaDto }),
     ).subscribe({
-      next: (reply: any) => {
-        console.log("Vaga Criada com sucesso!", reply);
+      next: (reply: { CODE: number, MESSAGE: string }) => {
+        //Trata as menssaens 
+        if (reply.CODE === 405 || reply.CODE === 400)
+          return new BadRequestException(reply.MESSAGE);
+        else if (reply.CODE === 200 || reply.CODE === 201)
+          return reply.MESSAGE;
       },
       error: error => {
-        throw new InternalServerErrorException("Erro interno do kafka", error)
+        console.error(error)
+        return new InternalServerErrorException(error)
       }
     });
 
@@ -60,11 +64,16 @@ export class ReservaController implements OnModuleInit {
       'cancelar_vaga',
       JSON.stringify({ data: canceledReservaDto }),
     ).subscribe({
-      next: (reply: any) => {
-        console.log("Vaga atualizada com sucesso!", reply);
+      next: (reply: { CODE: number, MESSAGE: string }) => {
+        //Trata as menssaens 
+        if (reply.CODE === 405 || reply.CODE === 400)
+          return new BadRequestException(reply.MESSAGE);
+        else if (reply.CODE === 200 || reply.CODE === 201)
+          return reply.MESSAGE;
       },
       error: (error) => {
-        throw new InternalServerErrorException("Erro interno do kafka", error)
+        console.error(error)
+        return new InternalServerErrorException(error)
 
       }
     });
@@ -77,6 +86,16 @@ export class ReservaController implements OnModuleInit {
   })
   async findReservasEstacionamento(@Param('id_estacionamento') id_estacionamento: number) {
     return await this.reservaService.findAll(id_estacionamento);
+  }
+
+
+  @Get('/adm/:id')
+  @ApiResponse({
+    status: 200,
+    description: 'Busca todos as reservas!',
+  })
+  async findReservas(@Param('id') id: number) {
+    return await this.reservaService.findAllAdm(id);
   }
 
   @Get(':id_reserva')

@@ -15,9 +15,6 @@ export class ReservaController {
      */
     @MessagePattern('reservar_vaga')
     async reservarVagas(@Payload() { data }: { data: Reserva }) {
-        console.log("========>>>>> Create");
-
-        console.log(data);
         const reservaCreated = await this.reservaService.create(data)
         return reservaCreated
     }
@@ -29,10 +26,6 @@ export class ReservaController {
      */
     @MessagePattern('cancelar_vaga')
     async cancelarVagas(@Payload() { data }: { data: Reserva }) {
-        console.log("=======>>>>>> Update");
-
-        console.log(data);
-
         const { id_cliente, id_estacionamento, id_veiculo } = data;
         const caceledVagaReserva = await this.reservaService.update(id_cliente, id_estacionamento, id_veiculo, { ...data, canceledAt: new Date() })
         return caceledVagaReserva

@@ -16,16 +16,15 @@ export class UpdateClienteDto extends PartialType(CreateClienteDto) {
     type: 'string',
     description: 'Nome do cliente',
   })
-  @MaxLength(50)
   name: string;
 
   @IsString()
   @IsNotEmpty()
+  @MaxLength(50)
   @ApiProperty({
     type: 'string',
     description: 'Email do cliente',
   })
-  @MaxLength(50)
   email: string;
 
   @IsString()
@@ -34,7 +33,7 @@ export class UpdateClienteDto extends PartialType(CreateClienteDto) {
     type: 'string',
     description: 'CPF do cliente',
   })
-  @MinLength(11)
   @MaxLength(11)
   cpf: string;
+ 
 }
