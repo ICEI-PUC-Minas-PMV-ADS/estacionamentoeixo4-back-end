@@ -13,7 +13,7 @@ async function bootstrap() {
         brokers: [
           'localhost:9094', 
           'host.docker.internal:9092',
-          process.env.KAFKA_URL
+          //process.env.KAFKA_URL
         ],
       },
       consumer: {
