@@ -12,7 +12,7 @@ import {
 import { Prisma } from '@prisma/client';
 
 export class CreateEstacionamentoDto {
-  @IsNumber()
+  @IsDecimal()
   @IsNotEmpty()
   @ApiProperty({
     type: 'number',

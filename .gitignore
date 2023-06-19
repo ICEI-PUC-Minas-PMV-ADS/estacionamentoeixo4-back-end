@@ -13,6 +13,8 @@
 /api_consumer/node_modules
 /api_consumer/package-lock.json
 /api_consumer/yarn.lock
+/api_consumer/.env
+
 
 # Logs
 logs
