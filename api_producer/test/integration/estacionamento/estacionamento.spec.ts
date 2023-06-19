@@ -8,19 +8,12 @@ import { AuthService } from "@src/auth/auth.service";
 import { ClienteService } from "@src/cliente/cliente.service";
 import { PrismaService } from "@src/prisma/prisma.service";
 import * as request from 'supertest';
-import axios from 'axios';
-import { AuthDTO } from "@src/auth/dto/me.input";
-import { CreateClienteDto } from "@src/cliente/dto/create-cliente.dto";
-import * as util from "util"
 import { EstacionamentoService } from "@src/estacionamento/estacionamento.service";
 import { CreateEstacionamentoDto } from "@src/estacionamento/dto/create-estacionamento.dto";
-import { Prisma } from "@prisma/client";
-import { Estacionamento } from "@prisma/client";
 import { AdministadorService } from "@src/administrador/services/administrador.service";
 import { CreateManagerDto } from "@src/administrador/dto/create-manager.dto";
 import { UpdateEstacionamentoDto } from "@src/estacionamento/dto/update-estacionamento.dto";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
-const BASE_URL = () => `http://localhost:${process.env.PORT}/api_producer/estacionamento`
 
 describe('EstacionamentoControler', () => {
   let service: AuthService
@@ -42,6 +35,7 @@ describe('EstacionamentoControler', () => {
         PrismaService,
         AppModule
       ],
+      imports: [AppModule],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
@@ -50,7 +44,7 @@ describe('EstacionamentoControler', () => {
 
     app = module.createNestApplication();
 
-    await app.listen(3000);
+    await app.init();
   });
 
   afterAll(async () => {
@@ -69,7 +63,11 @@ describe('EstacionamentoControler', () => {
       uuid_firebase
     }
 
-    const createAdmin = await axios.post(`http://localhost:${process.env.PORT}/api_producer/administrador`, createAdminBody).then(res => res.data)
+    const createAdmin = await request(app.getHttpServer())
+      .post(`/administrador`)
+      .send(createAdminBody)
+      .then(res => res.body)
+      .catch(e => console.error(e))
 
     const createBody: CreateEstacionamentoDto = {
       preco: 55,
@@ -88,7 +86,11 @@ describe('EstacionamentoControler', () => {
 
     }
 
-    const createEstacionamento = await axios.post(`${BASE_URL()}/${createAdmin["id"]}`, createBody).then(res => res.data)
+    const createEstacionamento = await request(app.getHttpServer())
+    .post(`/estacionamento/${createAdmin["id"]}`)
+    .send(createBody)
+    .then(res => res.body)
+    .catch(e => console.error(e))
     console.log("CREATE", createEstacionamento)
     expect(createEstacionamento["id"]).toBeTruthy()
     expect(createEstacionamento["preco"]).toBeTruthy()
@@ -99,7 +101,10 @@ describe('EstacionamentoControler', () => {
     expect(createEstacionamento["createdAt"]).toBeTruthy()
     expect(createEstacionamento["updatedAt"]).toBeTruthy()
 
-    const readEstacionamento = await axios.get(`${BASE_URL()}/${createEstacionamento["id_estacionamento"]}`).then(res => res.data)
+    const readEstacionamento = await request(app.getHttpServer())
+    .get(`/estacionamento/${createEstacionamento["id_estacionamento"]}`)
+    .then(res => res.body)
+    .catch(e => console.error(e))
     console.log("READ", readEstacionamento)
     expect(readEstacionamento["id"]).toBeTruthy()
 
@@ -118,15 +123,29 @@ describe('EstacionamentoControler', () => {
       numero: 12,
       uf: "YK"
     }
-    const updateEstacionamento = await axios.patch(`${BASE_URL()}/atualizar/${createEstacionamento["id_estacionamento"]}`, updateBody).then(res => res.data)
+
+    const updateEstacionamento = await request(app.getHttpServer())
+    .patch(`/estacionamento/atualizar/${createEstacionamento["id_estacionamento"]}`)
+    .send(updateBody)
+    .then(res => res.body)
+    .catch(e => console.error(e))
     console.log("UPDATE", updateEstacionamento)
     expect(updateEstacionamento["razao_social"]).not.toBe(createEstacionamento["razao_social"])
 
-    const deleteEstacionamento = await axios.delete(`http://localhost:${process.env.PORT}/api_producer/estacionamento/deletar/${createEstacionamento['id_estacionamento']}/${createAdmin["id"]}`).then(res => res.data).catch(e => e)
+    const deleteEstacionamento = await request(app.getHttpServer())
+    .delete(`/estacionamento/deletar/${createEstacionamento['id_estacionamento']}/${createAdmin["id"]}`)
+    .then(res => res.body)
+    .catch(e => console.error(e))
     console.log('DELETE', deleteEstacionamento)
-    const tryToReadEstacionamento = await axios.get(`${BASE_URL()}/encontrar/${createEstacionamento["id_estacionamento"]}`).then(res => res.data).catch(e => e)
+    const tryToReadEstacionamento = await request(app.getHttpServer())
+    .get(`/estacionamento/${createEstacionamento["id_estacionamento"]}`)
+    .then(res => res.body)
+    .catch(() => null)
     expect(tryToReadEstacionamento["id"]).toBeFalsy()
 
-    await axios.delete(`http://localhost:${process.env.PORT}/api_producer/administrador/${createAdmin["id"]}`).then(res => res.data).catch(e => console.error(e))
+    await request(app.getHttpServer())
+    .delete(`/administrador/${createAdmin["id"]}`)
+    .then(res => res.body)
+    .catch(e => console.error(e))
   })
 })

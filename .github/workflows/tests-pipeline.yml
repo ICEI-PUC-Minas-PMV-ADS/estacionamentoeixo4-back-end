@@ -1,5 +1,6 @@
 name: Tests Pipeline
 on:
+
   push:
     branches:
       - '**' # em qualquer branch que for realizado push, atira action
@@ -11,8 +12,49 @@ on:
       - develop
 
 jobs:
-  e2e-tests:
-    name: End to end tests
+  integration-tests:
+    name: Integration tests
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout project 
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install api_producer dependencies
+        working-directory: api_producer
+        run: npm i
+
+      - name: Install api_consumer dependencies
+        working-directory: api_consumer
+        run: npm i
+
+      - name: Build containers
+        run: docker-compose -f "docker-compose.yml" up -d --build
+
+      - name: Containers logs
+        run: docker-compose -ps
+
+      - name: Build migration
+        working-directory: api_producer
+        run: npm run migrate:run
+
+      - name: Run integration tests
+        working-directory: api_producer/test
+        run: npm run test integration
+
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f "docker-compose.yml" down
+  
+  unit-tests:
+    name: Unit tests
 
     runs-on: ubuntu-latest
 
@@ -23,7 +65,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: api_producer
-        run: yarn install
+        run: npm i
 
       - name: Run unit tests
         working-directory: api_producer/test

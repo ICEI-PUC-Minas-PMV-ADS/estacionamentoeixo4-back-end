@@ -1,7 +1,6 @@
 # compiled output
 /dist
 /node_modules
-.env
 */package-lock.json
 /api_producer/dist
 /api_producer/package-lock.json

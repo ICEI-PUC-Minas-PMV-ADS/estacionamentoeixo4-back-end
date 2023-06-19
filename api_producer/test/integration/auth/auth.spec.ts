@@ -8,14 +8,10 @@ import { AuthService } from "@src/auth/auth.service";
 import { ClienteService } from "@src/cliente/cliente.service";
 import { PrismaService } from "@src/prisma/prisma.service";
 import * as request from 'supertest';
-import axios from 'axios';
 import { AuthDTO } from "@src/auth/dto/me.input";
 import { CreateClienteDto } from "@src/cliente/dto/create-cliente.dto";
 import { ClienteController } from "@src/cliente/cliente.controller";
-import * as util from "util"
 import {AdministadorService} from "@src/administrador/services/administrador.service";
-
-const BASE_URL = (uri: string) => `http://localhost:${process.env.PORT}/api_producer/auth/${uri}`
 
 describe('AuthControler', () => {
     let service: AuthService
@@ -38,6 +34,7 @@ describe('AuthControler', () => {
         PrismaService,
         AppModule
       ],
+      imports: [AppModule]
     }).compile();
 
     service = module.get<AuthService>(AuthService);
@@ -74,12 +71,18 @@ describe('AuthControler', () => {
         uuid_firebase
       }
 
-      const response = await axios.post(`${BASE_URL("me")}`, meData).then(res => res.data)
+      const response = await request(app.getHttpServer())
+            .post(`/auth/me`)
+            .send(meData)
+            .then(res => res.body)
+            .catch(e => console.error(e))
 
       expect(response['accessToken']).toBeTruthy()
       expect(response['refreshToken']).toBeTruthy()
 
-      await axios.delete(`http://localhost:${process.env.PORT}/api_producer/cliente/${cliente?.id}`)
-      
+      await request(app.getHttpServer())
+            .delete(`/cliente/${cliente?.id}`)
+            .then(res => res.body)
+            .catch(e => console.error(e))
     })
 })

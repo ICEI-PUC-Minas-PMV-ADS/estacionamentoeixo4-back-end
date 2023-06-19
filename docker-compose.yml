@@ -1,5 +1,4 @@
 version: '3.8'
-name: 'production'
 services:
   # Postegres
   pg:
@@ -7,8 +6,6 @@ services:
     container_name: pg
     ports:
       - 5432:5432
-    expose:
-      - 5432:80
     environment:
       POSTGRES_USER: whypark
       POSTGRES_PASSWORD: whypark123
@@ -29,8 +26,6 @@ services:
     command: /bin/bash -c "redis-server --save 20 1 --loglevel warning  --requirepass $$REDIS_PASS"
     ports:
       - 6379:6379
-    expose:
-      - 6379:80
     cap_add:
       - SYS_NICE
     networks:
@@ -84,74 +79,8 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
     networks:
       - backend-networks
-  # Api Producer
-  api_producer:
-    image: producerapi
-    container_name: api_producer
-    restart: unless-stopped
-    depends_on:
-      - redis_whypk
-      - kafka
-      - pg
-    links:
-      - redis_whypk
-    networks:
-      - backend-networks
-    environment:
-      - DATABASE_URL=postgresql://whypark:whypark123@pg:5432/db_why_park?schema=public
-      - REDIS_PASS = password123
-      - REDIS_URI = redis://default:${REDIS_PASS}@redis_whypk:6379
-      - KAFKA_URL=kafka:9094
-      - ENVIRONMENT=dev
-      - JWT_ACCESS_SECRET=t323t24hgwafa=
-      - JWT_REFRESH_SECRET=asfqi33fgtrfewf3
-      - PORT=3000
-    ports:
-      - 3000:3000
-    expose:
-      - 3000
-
-  # Frontend
-  frontend:
-    image: frontend
-    container_name: frontend
-    depends_on:
-      - api_producer
-    networks:
-      - backend-networks
-    environment:
-      DEV: production
-      VITE_PORT_SERVER: 3000
-      VITE_SERVER: localhost
-    ports:
-      - 8000:8000
-    expose:
-      - 8000
-    volumes:
-      - frontend-data:/var/lib/frontend
-
-  # Api Consumer
-  api_consumer:
-    image: apiconsumer:latest
-    container_name: api_consumer
-    restart: unless-stopped
-    depends_on:
-      - kafka
-      - pg
-    links:
-      - kafka
-      - pg
-    networks:
-      - backend-networks
-    environment:
-      - DATABASE_URL=postgresql://whypark:whypark123@pg:5432/db_why_park?schema=public
-      - KAFKA_URL=kafka:9094
-    ports:
-      - 3030
 
 volumes:
-  frontend-data:
-    driver: local
   postgres-db-data:
     driver: local
   redis-data:
