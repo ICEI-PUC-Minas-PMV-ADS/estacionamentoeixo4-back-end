@@ -34,6 +34,9 @@ jobs:
       - name: Build containers
         run: docker-compose -f "docker-compose.yml" up -d --build
 
+      - name: Containers logs
+        run: docker-compose -ps
+
       - name: Build migration
         working-directory: api_producer
         run: npm run migrate:run
