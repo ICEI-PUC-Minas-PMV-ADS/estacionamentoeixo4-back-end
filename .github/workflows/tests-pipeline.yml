@@ -48,6 +48,10 @@ jobs:
       - name: Run integration tests
         working-directory: api_producer/test
         run: npm run test integration
+
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f "docker-compose.yml" down
   
   unit-tests:
     name: Unit tests
