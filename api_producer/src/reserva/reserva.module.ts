@@ -15,7 +15,7 @@ import { PrismaService } from '@src/prisma/prisma.service';
         options: {
           client: {
             // TODO: Teste
-            brokers: ["localhost:9094"],
+            brokers: [process.env.KAFKA_URL],
           },
 
           consumer: {
