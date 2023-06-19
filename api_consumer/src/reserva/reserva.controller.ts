@@ -26,8 +26,7 @@ export class ReservaController {
      */
     @MessagePattern('cancelar_vaga')
     async cancelarVagas(@Payload() { data }: { data: Reserva }) {
-        const { id_cliente, id_estacionamento, id_veiculo } = data;
-        const caceledVagaReserva = await this.reservaService.update(id_cliente, id_estacionamento, id_veiculo, { ...data, canceledAt: new Date() })
+        const caceledVagaReserva = await this.reservaService.update(data, { ...data, canceledAt: new Date() })
         return caceledVagaReserva
     }
 
