@@ -42,12 +42,10 @@ export class ReservaService {
    * @returns 
    */
 
-  async update(id_cliente: number, id_estacionamento: number, id_veiculo: number, reservaUpdate: Reserva) {
+  async update(id_reserva: number) {
     const findFirstReserva = await this.reservaRepository.reserva.findFirst({
       where: {
-        id_cliente,
-        id_veiculo,
-        id_estacionamento
+        id: id_reserva,
       }
     })
 
@@ -62,7 +60,7 @@ export class ReservaService {
       where: {
         id: findFirstReserva.id
       },
-      data: { ...findFirstReserva, ...reservaUpdate }
+      data: { ...findFirstReserva, canceledAt: new Date() }
     })
 
     if (!updateReserva) {

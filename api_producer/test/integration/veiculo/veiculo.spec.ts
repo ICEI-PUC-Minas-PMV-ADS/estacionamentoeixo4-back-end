@@ -8,14 +8,8 @@ import { AuthService } from "@src/auth/auth.service";
 import { ClienteService } from "@src/cliente/cliente.service";
 import { PrismaService } from "@src/prisma/prisma.service";
 import * as request from 'supertest';
-import axios from 'axios';
-import { AuthDTO } from "@src/auth/dto/me.input";
 import { CreateClienteDto } from "@src/cliente/dto/create-cliente.dto";
-import * as util from "util"
 import { EstacionamentoService } from "@src/estacionamento/estacionamento.service";
-import { CreateEstacionamentoDto } from "@src/estacionamento/dto/create-estacionamento.dto";
-import { Prisma } from "@prisma/client";
-import { Estacionamento } from "@prisma/client";
 import { VeiculoService } from "@src/veiculo/veiculo.service";
 import { CreateVeiculoDto } from "@src/veiculo/dto/create-veiculo.dto";
 import { ClienteController } from "@src/cliente/cliente.controller";
@@ -49,6 +43,7 @@ describe('ManagerControler', () => {
                 PrismaService,
                 AppModule
             ],
+            imports: [AppModule]
         }).compile();
 
         service = module.get<AuthService>(AuthService);
@@ -83,8 +78,11 @@ describe('ManagerControler', () => {
             uuid_firebase
         }
 
-        const createdCliente = await axios.post(`http://localhost:${process.env.PORT}/api_producer/cliente`
-            , createCliente).then(res => res.data)
+        const createdCliente = await request(app.getHttpServer())
+            .post(`/cliente`)
+            .send(createCliente)
+            .then(res => res.body)
+            .catch(e => console.error(e))
 
         const createVeiculoBody: CreateVeiculoDto = {
             placa,
@@ -93,7 +91,11 @@ describe('ManagerControler', () => {
             tipo: "Carro"
         }
 
-        const createVeiculo = await axios.post(`http://localhost:${process.env.PORT}/api_producer/veiculo`, createVeiculoBody).then(res => res.data)
+        const createVeiculo = await request(app.getHttpServer())
+            .post(`/veiculo`)
+            .send(createVeiculoBody)
+            .then(res => res.body)
+            .catch(e => console.error(e))
         console.log('CREATE', createVeiculo)
         expect(createVeiculo['id']).toBeTruthy()
         expect(createVeiculo['placa']).toBeTruthy()
@@ -102,7 +104,10 @@ describe('ManagerControler', () => {
         expect(createVeiculo['createdAt']).toBeTruthy()
         expect(createVeiculo['updatedAt']).toBeTruthy()
 
-        const readVeiculo = await axios.get(`http://localhost:${process.env.PORT}/api_producer/veiculo/${createVeiculo["id"]}`).then(res => res.data)
+        const readVeiculo = await request(app.getHttpServer())
+            .get(`/veiculo/${createVeiculo["id"]}`)
+            .then(res => res.body)
+            .catch(e => console.error(e))
         console.log("READ", readVeiculo)
         expect(readVeiculo['id']).toBeTruthy()
 
@@ -113,15 +118,28 @@ describe('ManagerControler', () => {
             id_cliente: +createdCliente?.id
         }
 
-        const updateVeiculo = await axios.patch(`http://localhost:${process.env.PORT}/api_producer/veiculo/${createVeiculo["id"]}`, updateVeiculoBody).then(res => res.data)
+        const updateVeiculo = await request(app.getHttpServer())
+            .patch(`/veiculo/${createVeiculo["id"]}`)
+            .send(updateVeiculoBody)
+            .then(res => res.body)
+            .catch(e => console.error(e))
         console.log("UPDATE", updateVeiculo)
         expect(createVeiculo["tipo"]).not.toBe(updateVeiculo["tipo"])
 
-        const deleteVeiculo = await axios.delete(`http://localhost:${process.env.PORT}/api_producer/veiculo/${createVeiculo?.id}`).then(res => res.data)
+        const deleteVeiculo = await request(app.getHttpServer())
+            .delete(`/veiculo/${createVeiculo["id"]}`)
+            .then(res => res.body)
+            .catch(e => console.error(e))
         console.log("DELETE", deleteVeiculo)
-        const tryToReadVeiculo = await axios.get(`http://localhost:${process.env.PORT}/api_producer/veiculo/${createVeiculo["id"]}`).then(res => res.data).catch(e => e)
+        const tryToReadVeiculo = await request(app.getHttpServer())
+            .get(`/veiculo/${createVeiculo["id"]}`)
+            .then(res => res.body)
+            .catch(e => console.error(e))
         expect(tryToReadVeiculo["id"]).toBeFalsy()
 
-        await axios.delete(`http://localhost:${process.env.PORT}/api_producer/cliente/${createdCliente?.id}`)
+        await request(app.getHttpServer())
+            .get(`/cliente/${createdCliente["id"]}`)
+            .then(res => res.body)
+            .catch(e => console.error(e))
     })
 })
