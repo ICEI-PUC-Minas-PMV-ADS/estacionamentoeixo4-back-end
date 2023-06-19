@@ -15,6 +15,10 @@ import { CreateManagerDto } from "@src/administrador/dto/create-manager.dto";
 import { UpdateEstacionamentoDto } from "@src/estacionamento/dto/update-estacionamento.dto";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 
+const delay = async (ms: number) => {
+  return new Promise((resolve, _reject) => setTimeout(resolve, ms))
+}
+
 describe('EstacionamentoControler', () => {
   let service: AuthService
   let controller: AuthController
@@ -48,6 +52,7 @@ describe('EstacionamentoControler', () => {
   });
 
   afterAll(async () => {
+    await delay(6000)
     await app.close()
   })
 

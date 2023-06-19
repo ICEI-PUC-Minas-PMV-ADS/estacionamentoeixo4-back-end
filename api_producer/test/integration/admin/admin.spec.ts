@@ -16,6 +16,10 @@ import { VeiculoService } from "@src/veiculo/veiculo.service";
 import { RedisModule } from '../../../redis/redis.module';
 import { UpdateManagerDto } from "@src/administrador/dto/update-manager.dto";
 
+const delay = async (ms: number) => {
+    return new Promise((resolve, _reject) => setTimeout(resolve, ms))
+}
+
 describe('ManagerControler', () => {
     let service: AuthService
     let controller: AuthController
@@ -54,6 +58,7 @@ describe('ManagerControler', () => {
     });
 
     afterAll(async () => {
+        await delay(6000)
         await app.close()
     })
 

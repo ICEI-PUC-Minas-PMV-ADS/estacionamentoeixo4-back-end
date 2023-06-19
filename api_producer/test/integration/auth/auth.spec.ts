@@ -13,6 +13,10 @@ import { CreateClienteDto } from "@src/cliente/dto/create-cliente.dto";
 import { ClienteController } from "@src/cliente/cliente.controller";
 import {AdministadorService} from "@src/administrador/services/administrador.service";
 
+const delay = async (ms: number) => {
+  return new Promise((resolve, _reject) => setTimeout(resolve, ms))
+}
+
 describe('AuthControler', () => {
     let service: AuthService
     let controller: AuthController
@@ -48,6 +52,7 @@ describe('AuthControler', () => {
   });
 
     afterAll(async () => {
+        await delay(6000)
         await app.close()
     })
 
