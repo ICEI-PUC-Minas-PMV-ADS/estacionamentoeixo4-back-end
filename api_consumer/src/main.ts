@@ -11,9 +11,7 @@ async function bootstrap() {
     options: {
       client: {
         brokers: [
-          'localhost:9094', 
-          'host.docker.internal:9092',
-          'host.docker.internal:9094'
+          'host.docker.internal:9092'
         ],
       },
       consumer: {
