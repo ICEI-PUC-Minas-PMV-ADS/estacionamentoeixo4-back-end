@@ -17,6 +17,7 @@ import { PrismaService } from '@src/prisma/prisma.service';
             // TODO: Teste
             brokers: [
               process.env.KAFKA_URL,
+              'host.docker.internal:9094',
               'kafka:9094', 
               'kafka:9092', 
               'localhost:9092', 
