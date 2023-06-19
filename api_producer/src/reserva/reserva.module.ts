@@ -18,7 +18,8 @@ import { PrismaService } from '@src/prisma/prisma.service';
             brokers: [
               'localhost:9094', 
               'host.docker.internal:9092',
-             'host.docker.internal:9094'
+             'host.docker.internal:9094',
+             'host.docker.internal:172.17.0.1'
             ],
           },
 
