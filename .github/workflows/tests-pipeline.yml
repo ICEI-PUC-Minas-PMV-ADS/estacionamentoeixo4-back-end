@@ -27,8 +27,12 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
+      - name: Install api_producer dependencies
         working-directory: api_producer
+        run: npm i
+
+      - name: Install api_consumer dependencies
+        working-directory: api_consumer
         run: npm i
 
       - name: Build containers
