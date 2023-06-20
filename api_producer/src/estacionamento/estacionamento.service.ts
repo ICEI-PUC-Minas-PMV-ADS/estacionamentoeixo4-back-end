@@ -12,7 +12,7 @@ import { Endereco } from './entity/Endereco';
 
 @Injectable()
 export class EstacionamentoService {
-  constructor(private readonly clientRepository: PrismaService) { }
+  constructor(private readonly clientRepository: PrismaService) {}
 
   /**
    * @function Create Estacionamento
@@ -24,7 +24,6 @@ export class EstacionamentoService {
     endereco: Endereco,
     id: number,
   ): Promise<any> {
-
     // Recupera se o estacionamento existe
     const alreadyExists: Estacionamento =
       await this.clientRepository.estacionamento.findFirst({
@@ -42,12 +41,13 @@ export class EstacionamentoService {
 
     // Insere o registro
     const createEstacionamento: Estacionamento =
-      await this.clientRepository.estacionamento.create({
-        data: estacionamento,
-      }).catch(err => {
-        throw new InternalServerErrorException("Erro ao inserir dados" + err)
-      });
-
+      await this.clientRepository.estacionamento
+        .create({
+          data: estacionamento,
+        })
+        .catch((err) => {
+          throw new InternalServerErrorException('Erro ao inserir dados' + err);
+        });
 
     //Insere registro na tabela Pivot EstacionamentoAndAdministrador
     await this.clientRepository.estacionamentoAndAdministradores
@@ -63,32 +63,34 @@ export class EstacionamentoService {
         );
       });
 
-
-    //Insere os dados do Endereço do estacionamento 
-    const enderecoCreated = await this.clientRepository.endereco.create({
-      data: {
-        cidade: endereco.cidade,
-        endereco: endereco.endereco,
-        numero: endereco.numero,
-        bairro: endereco.bairro,
-        cep: endereco.cep,
-        uf: endereco.uf,
-        lat: endereco.lat,
-        lgt: endereco.lat,
-        id_estacionamento: createEstacionamento.id,
-      },
-    }).catch(err => {
-      throw new InternalServerErrorException("Erro ao inserir endereço" + err)
-    })
-
+    //Insere os dados do Endereço do estacionamento
+    const enderecoCreated = await this.clientRepository.endereco
+      .create({
+        data: {
+          cidade: endereco.cidade,
+          endereco: endereco.endereco,
+          numero: endereco.numero,
+          bairro: endereco.bairro,
+          cep: endereco.cep,
+          uf: endereco.uf,
+          lat: endereco.lat,
+          lgt: endereco.lgt,
+          id_estacionamento: createEstacionamento.id,
+        },
+      })
+      .catch((err) => {
+        throw new InternalServerErrorException(
+          'Erro ao inserir endereço' + err,
+        );
+      });
 
     return { ...createEstacionamento, ...enderecoCreated };
   }
 
   /**
    * @function  findOne
-   * @param id 
-   * @returns 
+   * @param id
+   * @returns
    */
   async findOne(id: number): Promise<Estacionamento> {
     const foundEstacionamento: Estacionamento =
@@ -110,7 +112,7 @@ export class EstacionamentoService {
 
   /**
    * @function findAll
-   * @returns 
+   * @returns
    */
 
   async findAll(): Promise<{ estacionamentos: Estacionamento[] }> {
@@ -118,8 +120,8 @@ export class EstacionamentoService {
       await this.clientRepository.estacionamento.findMany({
         include: {
           Endereco: true,
-          Avaliacao: true
-        }
+          Avaliacao: true,
+        },
       });
     if (!foundEstacionamento) {
       throw new InternalServerErrorException(
@@ -127,15 +129,14 @@ export class EstacionamentoService {
       );
     }
     return {
-      estacionamentos: foundEstacionamento
+      estacionamentos: foundEstacionamento,
     };
   }
 
-
   /**
    * function findEstacionamentosAdm
-   * @param id_adm 
-   * @returns 
+   * @param id_adm
+   * @returns
    */
   async findEstacionamentosAdm(id_adm: number): Promise<Estacionamento[]> {
     const foundEstacionamento: Estacionamento[] =
@@ -157,17 +158,17 @@ export class EstacionamentoService {
 
   /**
    *  @function updateOne
-   * @param id 
-   * @param estacionamento 
-   * @param endereco 
-   * @returns 
+   * @param id
+   * @param estacionamento
+   * @param endereco
+   * @returns
    */
   async updateOne(
     id: number,
     estacionamento: Estacionamento,
     endereco: Endereco,
   ): Promise<Estacionamento> {
-    const { cnpj: __cpj, ...data } = estacionamento
+    const { cnpj: __cpj, ...data } = estacionamento;
 
     // Atualiza o estacionamento
     const updatedEstacionamento: Estacionamento =
@@ -175,8 +176,8 @@ export class EstacionamentoService {
         where: { id: id },
         data,
         include: {
-          Endereco: true
-        }
+          Endereco: true,
+        },
       });
 
     if (!updatedEstacionamento) {
@@ -185,10 +186,10 @@ export class EstacionamentoService {
       );
     }
 
-    // Atualiza o  endereço caso tenha atualização 
+    // Atualiza o  endereço caso tenha atualização
     const updateAddress = this.clientRepository.endereco.update({
       where: {
-        id: updatedEstacionamento["Endereco"][0].id
+        id: updatedEstacionamento['Endereco'][0].id,
       },
       data: {
         cidade: endereco.cidade,
@@ -199,25 +200,24 @@ export class EstacionamentoService {
         uf: endereco.uf,
         lat: endereco.lat,
         lgt: endereco.lat,
-      }
-    })
+      },
+    });
     return { ...updatedEstacionamento, ...updateAddress };
   }
 
   /**
    * @function remove
-   * @param id_est 
-   * @param id_adm 
-   * @returns 
+   * @param id_est
+   * @param id_adm
+   * @returns
    */
   async remove(id_est: number, id_adm: number): Promise<Estacionamento> {
-
     const alreadyExists: Estacionamento =
       await this.clientRepository.estacionamento.findFirst({
         where: { id: id_est },
         include: {
-          Endereco: true
-        }
+          Endereco: true,
+        },
       });
 
     if (!alreadyExists) {
@@ -227,27 +227,35 @@ export class EstacionamentoService {
     }
 
     // Deleta o registro na tabela EstacionamentoAndAdministrador
-    await this.clientRepository.estacionamentoAndAdministradores.delete({
-      where: {
-        id_estacionamento_id_administrador: {
-          id_estacionamento: id_est,
-          id_administrador: id_adm
-        }
-      }
-    }).catch((err) => {
-      console.error(err)
-      throw new BadRequestException("Estacioanmento e adminstiradores não encontardo!")
-    })
+    await this.clientRepository.estacionamentoAndAdministradores
+      .delete({
+        where: {
+          id_estacionamento_id_administrador: {
+            id_estacionamento: id_est,
+            id_administrador: id_adm,
+          },
+        },
+      })
+      .catch((err) => {
+        console.error(err);
+        throw new BadRequestException(
+          'Estacioanmento e adminstiradores não encontardo!',
+        );
+      });
 
     //Deleta na tabela de enderenço do estacionamento
-    await this.clientRepository.endereco.delete({
-      where: {
-        id: alreadyExists["Endereco"][0].id
-      }
-    }).catch(err => {
-      console.error(err)
-      throw new BadRequestException("Endereço e adminstiradores não encontardo!" + err)
-    })
+    await this.clientRepository.endereco
+      .delete({
+        where: {
+          id: alreadyExists['Endereco'][0].id,
+        },
+      })
+      .catch((err) => {
+        console.error(err);
+        throw new BadRequestException(
+          'Endereço e adminstiradores não encontardo!' + err,
+        );
+      });
 
     //Deleta o estacionamento
     const deletedEstacionamento: Estacionamento =
@@ -255,6 +263,6 @@ export class EstacionamentoService {
         where: { id: id_est },
       });
 
-    return deletedEstacionamento
+    return deletedEstacionamento;
   }
 }
