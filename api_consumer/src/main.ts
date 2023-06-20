@@ -11,13 +11,9 @@ async function bootstrap() {
     options: {
       client: {
         brokers: [
-          process.env.KAFKA_URL,
-          'host.docker.internal:9094',
-          'kafka:9094', 
-          'kafka:9092', 
-          'localhost:9092', 
-          'localhost:9094',
-          'host.docker.internal:9092'
+          'localhost:9094', 
+          'host.docker.internal:9092',
+          'host.docker.internal:9094'
         ],
       },
       consumer: {

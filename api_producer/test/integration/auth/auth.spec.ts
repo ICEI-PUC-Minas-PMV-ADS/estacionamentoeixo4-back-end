@@ -53,9 +53,9 @@ describe('AuthControler', () => {
 
     it('Deve retornar um objeto com accessToken e refreshToken', async () => {
 
-      const cpf = `${Math.random().toString().substring(5, 8)}44433322`
+      const cpf = `${Math.random().toString().substring(5, 8)}44455322`
       const email = `teste.${Math.random().toString().substring(5, 9)}@fulano.com`   
-      const uuid_firebase = `${cpf}teste`
+      const uuid_firebase = `${cpf}teste0123`
 
       const clienteData: CreateClienteDto = {
         name: "Apenas Fulano",

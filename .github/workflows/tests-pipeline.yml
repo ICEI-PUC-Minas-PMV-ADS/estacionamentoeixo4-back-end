@@ -1,10 +1,5 @@
 name: Tests Pipeline
 on:
-
-  push:
-    branches:
-      - '**' # em qualquer branch que for realizado push, atira action
-
   pull_request:
     branches:
       - main
