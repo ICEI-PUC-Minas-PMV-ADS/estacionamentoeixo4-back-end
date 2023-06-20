@@ -16,9 +16,7 @@ import { ClienteController } from "@src/cliente/cliente.controller";
 import { AdministadorService } from "@src/administrador/services/administrador.service";
 import { UpdateVeiculoDto } from "@src/veiculo/dto/update-veiculo.dto";
 
-const delay = async (ms: number) => {
-    return new Promise((resolve, _reject) => setTimeout(resolve, ms))
-}
+const BASE_URL = (uri: string = "", route: string = "veiculo") => `http://localhost:${process.env.PORT}/api_producer/${route}/${uri}`
 
 describe('ManagerControler', () => {
     let service: AuthService
@@ -61,7 +59,6 @@ describe('ManagerControler', () => {
     });
 
     afterAll(async () => {
-        await delay(6000)
         await app.close()
     })
 
