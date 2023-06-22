@@ -12,7 +12,6 @@ import {
 import { Prisma } from '@prisma/client';
 
 export class CreateEstacionamentoDto {
-  @IsInt()
   @IsNotEmpty()
   @ApiProperty({
     type: 'number',
