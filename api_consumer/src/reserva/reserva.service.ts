@@ -17,7 +17,14 @@ export class ReservaService {
   async create(createReserva: Reserva) {
 
     const reservaCreated = await this.reservaRepository.reserva.create({
-      data: { ...createReserva, canceledAt: null }
+      data: {
+        duracao: createReserva.duracao,
+        id_cliente: createReserva.id_cliente,
+        id_estacionamento: createReserva.id_estacionamento,
+        horario_reserva: createReserva.horario_reserva,
+        id_veiculo: createReserva.id_veiculo,
+        canceledAt: null
+      }
     })
 
     if (!reservaCreated) {
@@ -45,7 +52,7 @@ export class ReservaService {
   async update(id_reserva: number) {
     const findFirstReserva = await this.reservaRepository.reserva.findFirst({
       where: {
-        id: id_reserva,
+        id: Number(id_reserva),
       }
     })
 
