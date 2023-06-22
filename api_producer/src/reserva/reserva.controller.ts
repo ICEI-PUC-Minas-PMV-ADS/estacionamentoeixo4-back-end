@@ -53,16 +53,16 @@ export class ReservaController implements OnModuleInit {
 
   }
 
-  @Patch()
+  @Patch('/cancelar/:id_reserva')
   @ApiResponse({
     status: 200,
     description: 'Reserva cancelada com sucesso!',
   })
   @ApiBody({ type: [CanceledReservaDto], description: 'Reserva cancelada' })
-  async update(@Body() canceledReservaDto: CanceledReservaDto) {
+  async update(@Param('id_reserva') id_reserva: number) {
     this.clientKafka.send(
       'cancelar_vaga',
-      JSON.stringify({ data: canceledReservaDto }),
+      JSON.stringify({ data: id_reserva }),
     ).subscribe({
       next: (reply: { CODE: number, MESSAGE: string }) => {
         //Trata as menssaens 
@@ -105,7 +105,7 @@ export class ReservaController implements OnModuleInit {
     description: 'Busca todas as reservas do cliente!',
   })
   async findReservasCliente(@Param('id') id: number) {
-    return await this.reservaService.findReservasUser(id);
+    return await this.reservaService.findReservasUser(+id);
   }
 
   @Get(':id_reserva')

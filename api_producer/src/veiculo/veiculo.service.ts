@@ -33,11 +33,17 @@ export class VeiculoService {
     }
 
     const veiculoResult: Veiculo = await this.veiculoRepository.veiculo.create({
-      data: createVeiculoDto,
+      data: {
+        modelo: createVeiculoDto.modelo,
+        placa: createVeiculoDto.placa,
+        tipo: createVeiculoDto.tipo,
+        id_cliente: createVeiculoDto.id_cliente,
+
+      },
     });
 
     if (!veiculoResult) {
-      throw new InternalServerErrorException(
+      return new InternalServerErrorException(
         `Não foi possível criar o veículo `,
       );
     }
@@ -78,11 +84,18 @@ export class VeiculoService {
   }
 
   async update(id: number, updateVeiculoDto: UpdateVeiculoDto) {
+    console.log(id);
+
     const veiculoUpdateResult = this.veiculoRepository.veiculo.update({
       where: {
-        id,
+        id: Number(id),
       },
-      data: updateVeiculoDto,
+      data: {
+        modelo: updateVeiculoDto.modelo,
+        placa: updateVeiculoDto.placa,
+        tipo: updateVeiculoDto.tipo,
+        id_cliente: updateVeiculoDto.id_cliente,
+      },
     });
 
     if (!veiculoUpdateResult) {

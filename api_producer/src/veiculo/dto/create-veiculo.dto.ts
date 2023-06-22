@@ -29,7 +29,6 @@ export class CreateVeiculoDto {
   @IsInt()
   @ApiProperty({
     type: 'number',
-    default: 1,
   })
   @IsNotEmpty()
   id_cliente: number;

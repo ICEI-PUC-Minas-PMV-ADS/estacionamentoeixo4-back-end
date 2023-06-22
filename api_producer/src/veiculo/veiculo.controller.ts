@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  BadRequestException,
 } from '@nestjs/common';
 import { VeiculoService } from './veiculo.service';
 import { CreateVeiculoDto } from './dto/create-veiculo.dto';
@@ -65,7 +66,10 @@ export class VeiculoController {
     description: 'Atualiza veículo',
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  update(@Param('id') id: string, @Body() updateVeiculoDto: UpdateVeiculoDto) {
+  update(@Param('id') id: number, @Body() updateVeiculoDto: UpdateVeiculoDto) {
+    if (!id) {
+      return new BadRequestException("Id vazio")
+    }
     return this.veiculoService.update(+id, updateVeiculoDto);
   }
 

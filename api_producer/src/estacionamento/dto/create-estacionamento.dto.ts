@@ -12,7 +12,7 @@ import {
 import { Prisma } from '@prisma/client';
 
 export class CreateEstacionamentoDto {
-  @IsDecimal()
+  @IsInt()
   @IsNotEmpty()
   @ApiProperty({
     type: 'number',
@@ -51,7 +51,6 @@ export class CreateEstacionamentoDto {
     description: "CNPJ"
 
   })
-  @MaxLength(14)
   cnpj: string;
 
   // Fields Address

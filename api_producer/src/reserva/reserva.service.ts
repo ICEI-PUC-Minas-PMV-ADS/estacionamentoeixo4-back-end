@@ -76,7 +76,7 @@ export class ReservaService {
     async findReservasUser(id: number) {
         const reserva = await this.reservaRepository.reserva.findMany({
             where: {
-                id_cliente: id,
+                id_cliente: Number(id),
                 canceledAt: null
             }
         }).catch(err => {
